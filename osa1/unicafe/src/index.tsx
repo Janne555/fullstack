@@ -6,6 +6,26 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
+
+
+  return (
+    <div>
+      <h2>Give feedback</h2>
+      <button onClick={() => setGood((prev) => prev + 1)}>Good</button>
+      <button onClick={() => setNeutral((prev) => prev + 1)}>Neutral</button>
+      <button onClick={() => setBad((prev) => prev + 1)}>Bad</button>
+      <Statistics good={good} bad={bad} neutral={neutral} />
+    </div>
+  )
+}
+
+type StatisticsProps = {
+  good: number
+  neutral: number
+  bad: number
+}
+
+const Statistics = ({ good, neutral, bad }: StatisticsProps) => {
   function average() {
     const result = (good - bad) / (good + neutral + bad)
     return isNaN(result) ? 0 : result
@@ -18,10 +38,6 @@ const App = () => {
 
   return (
     <div>
-      <h2>Give feedback</h2>
-      <button onClick={() => setGood((prev) => prev + 1)}>Good</button>
-      <button onClick={() => setNeutral((prev) => prev + 1)}>Neutral</button>
-      <button onClick={() => setBad((prev) => prev + 1)}>Bad</button>
       <h2>statistics</h2>
       <p>good {good}</p>
       <p>neutral {neutral}</p>
