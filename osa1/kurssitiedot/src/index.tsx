@@ -2,28 +2,30 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 const App = () => {
-  const course = 'Half Stack application development'
-  const part1 = {
-    name: 'Fundamentals of React',
-    exercises: 10
-  }
-
-  const part2 = {
-    name: 'Using props to pass data',
-    exercises: 7
-  }
-
-  const part3 = {
-    name: 'State of a component',
-    exercises: 14
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ]
   }
 
   return (
     <div>
-      <Header course={course} />
-      <Content part1={part1} part2={part2} part3={part3} />
-      <Total numExercises={part1.exercises + part2.exercises + part3.exercises} />
-    </div>
+      <Header course={course.name} />
+      <Content parts={course.parts} />
+      <Total numExercises={course.parts.reduce((sum, { exercises }): number => exercises + sum, 0)} />
+    </div >
   )
 }
 
@@ -35,17 +37,15 @@ type PartType = {
 }
 
 type ContentProps = {
-  part1: PartType
-  part2: PartType
-  part3: PartType
+  parts: PartType[]
 }
 
-const Content = ({ part1, part2, part3 }: ContentProps) => {
+const Content = ({ parts }: ContentProps) => {
   return (
     <div>
-      <Part {...part1} />
-      <Part {...part2} />
-      <Part {...part3} />
+      {
+        parts.map(part => <Part {...part} />)
+      }
     </div>
   )
 }
