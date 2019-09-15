@@ -26,12 +26,36 @@ const App = (props: AppProps) => {
     })
   }
 
+  function mostVotes(): number {
+    return votes.reduce((indexOfHighest, current, index, votes) => {
+      if (current > votes[indexOfHighest])
+        return index
+      else
+        return indexOfHighest
+    }, 0)
+  }
+
   return (
     <div>
-      <p>{props.anecdotes[selected]}</p>
-      <p>has {votes[selected] != null ? votes[selected] : 0} votes</p>
+      <Anecdote text={props.anecdotes[selected]} votes={votes[selected] != null ? votes[selected] : 0} />
       <button onClick={handleVote}>vote</button>
       <button onClick={handleNext}>next anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      <Anecdote text={props.anecdotes[mostVotes()]} votes={votes[mostVotes()] != null ? votes[mostVotes()] : 0} />
+    </div>
+  )
+}
+
+type AnecdoteProps = {
+  text: string
+  votes: number
+}
+
+const Anecdote = ({ text, votes }: AnecdoteProps) => {
+  return (
+    <div>
+      <p>{text}</p>
+      <p>has {votes} votes</p>
     </div>
   )
 }
