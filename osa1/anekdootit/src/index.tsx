@@ -7,18 +7,31 @@ type AppProps = {
 
 const App = (props: AppProps) => {
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState<number[]>([])
 
-  function handleClick() {
+  function handleNext() {
     if (selected + 1 < anecdotes.length)
       setSelected((prev) => prev + 1)
     else
       setSelected(0)
   }
 
+  function handleVote() {
+    setVotes((prev) => {
+      const copy = [...prev]
+      if (copy[selected] == null)
+        copy[selected] = 0
+      copy[selected] += 1
+      return copy
+    })
+  }
+
   return (
     <div>
       <p>{props.anecdotes[selected]}</p>
-      <button onClick={handleClick}>next anecdote</button>
+      <p>has {votes[selected] != null ? votes[selected] : 0} votes</p>
+      <button onClick={handleVote}>vote</button>
+      <button onClick={handleNext}>next anecdote</button>
     </div>
   )
 }
