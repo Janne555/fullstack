@@ -9,9 +9,9 @@ const App = () => {
   return (
     <div>
       <h2>Give feedback</h2>
-      <button onClick={() => setGood((prev) => prev + 1)}>Good</button>
-      <button onClick={() => setNeutral((prev) => prev + 1)}>Neutral</button>
-      <button onClick={() => setBad((prev) => prev + 1)}>Bad</button>
+      <Button text="good" handleClick={() => setGood((prev) => prev + 1)} />
+      <Button text="neutral" handleClick={() => setNeutral((prev) => prev + 1)} />
+      <Button text="bad" handleClick={() => setBad((prev) => prev + 1)} />
       <h2>statistics</h2>
       <Statistics good={good} bad={bad} neutral={neutral} />
     </div>
@@ -40,14 +40,28 @@ const Statistics = ({ good, neutral, bad }: StatisticsProps) => {
 
   return (
     <div>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {good}</p>
-      <p>average {average()}</p>
-      <p>positive {positive()}%</p>
+      <Statistic text="good" value={good} />
+      <Statistic text="neutral" value={neutral} />
+      <Statistic text="bad" value={bad} />
+      <Statistic text="all" value={good + neutral + bad} />
+      <Statistic text="average" value={average()} />
+      <Statistic text="positive" value={`${positive()} %`} />
     </div>
   )
 }
+
+type StatisticProps = {
+  text: string
+  value: number | string
+}
+
+const Statistic = ({ text, value }: StatisticProps) => <p>{text} {value}</p>
+
+type ButtonProps = {
+  text: string
+  handleClick: () => void
+}
+
+const Button = ({ handleClick, text }: ButtonProps) => <button onClick={handleClick}>{text}</button>
 
 ReactDOM.render(<App />, document.getElementById('root'))
