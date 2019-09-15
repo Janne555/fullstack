@@ -44,7 +44,7 @@ const Content = ({ parts }: ContentProps) => {
   return (
     <div>
       {
-        parts.map(part => <Part {...part} />)
+        parts.map(part => <Part key={part.name} {...part} />)
       }
     </div>
   )
