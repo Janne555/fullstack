@@ -27,26 +27,28 @@ type StatisticsProps = {
 const Statistics = ({ good, neutral, bad }: StatisticsProps) => {
   function average() {
     const result = (good - bad) / (good + neutral + bad)
-    return isNaN(result) ? 0 : result
+    return isNaN(result) ? 0 : result.toFixed(1)
   }
 
   function positive() {
     const result = good / (good + neutral + bad) * 100
-    return isNaN(result) ? 0 : result
+    return isNaN(result) ? 0 : result.toFixed(1)
   }
 
   if (!bad && !neutral && !good)
     return <p>no feedback given</p>
 
   return (
-    <div>
-      <Statistic text="good" value={good} />
-      <Statistic text="neutral" value={neutral} />
-      <Statistic text="bad" value={bad} />
-      <Statistic text="all" value={good + neutral + bad} />
-      <Statistic text="average" value={average()} />
-      <Statistic text="positive" value={`${positive()} %`} />
-    </div>
+    <table>
+      <tbody>
+        <Statistic text="good" value={good} />
+        <Statistic text="neutral" value={neutral} />
+        <Statistic text="bad" value={bad} />
+        <Statistic text="all" value={good + neutral + bad} />
+        <Statistic text="average" value={average()} />
+        <Statistic text="positive" value={`${positive()} %`} />
+      </tbody>
+    </table>
   )
 }
 
@@ -55,7 +57,12 @@ type StatisticProps = {
   value: number | string
 }
 
-const Statistic = ({ text, value }: StatisticProps) => <p>{text} {value}</p>
+const Statistic = ({ text, value }: StatisticProps) => (
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
+)
 
 type ButtonProps = {
   text: string
