@@ -10,10 +10,7 @@ const App = (props: AppProps) => {
   const [votes, setVotes] = useState<number[]>([])
 
   function handleNext() {
-    if (selected + 1 < anecdotes.length)
-      setSelected((prev) => prev + 1)
-    else
-      setSelected(0)
+    setSelected(Math.ceil(Math.random() * props.anecdotes.length) - 1)
   }
 
   function handleVote() {
