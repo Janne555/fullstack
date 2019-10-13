@@ -7,7 +7,7 @@ type AppProps = {
 
 const App = (props: AppProps) => {
   const [selected, setSelected] = useState(0)
-  const [votes, setVotes] = useState<number[]>([])
+  const [votes, setVotes] = useState<number[]>(Array(props.anecdotes.length).fill(0))
 
   function handleNext() {
     setSelected(Math.ceil(Math.random() * props.anecdotes.length) - 1)
@@ -24,12 +24,13 @@ const App = (props: AppProps) => {
   }
 
   function mostVotes(): number {
-    return votes.reduce((indexOfHighest, current, index, votes) => {
-      if (current > votes[indexOfHighest])
-        return index
-      else
-        return indexOfHighest
-    }, 0)
+    let mostVotesIndex = 0
+    for (let i = 0; i < anecdotes.length; i++) {
+      if (votes[mostVotesIndex] < votes[i])
+        mostVotesIndex = i
+    }
+
+    return mostVotesIndex
   }
 
   return (
@@ -38,7 +39,7 @@ const App = (props: AppProps) => {
       <button onClick={handleVote}>vote</button>
       <button onClick={handleNext}>next anecdote</button>
       <h1>Anecdote with most votes</h1>
-      <Anecdote text={props.anecdotes[mostVotes()]} votes={votes[mostVotes()] != null ? votes[mostVotes()] : 0} />
+      {votes[mostVotes()] === 0 ? "No votes yet" : <Anecdote text={props.anecdotes[mostVotes()]} votes={votes[mostVotes()] != null ? votes[mostVotes()] : 0} />}
     </div>
   )
 }
@@ -49,6 +50,7 @@ type AnecdoteProps = {
 }
 
 const Anecdote = ({ text, votes }: AnecdoteProps) => {
+
   return (
     <div>
       <p>{text}</p>
