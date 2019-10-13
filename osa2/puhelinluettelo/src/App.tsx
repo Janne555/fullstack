@@ -8,8 +8,12 @@ const App = () => {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setPersons(prev => [...prev, { name: newName }])
-    setNewName('')
+    if (persons.every(person => person.name !== newName)) {
+      setPersons(prev => [...prev, { name: newName }])
+      setNewName('')
+    }
+    else
+      alert(`${newName} is already in the phonebook`)
   }
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -29,9 +33,9 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-      {
-        persons.map(person => <li key={person.name}>{person.name}</li>)
-      }
+        {
+          persons.map(person => <li key={person.name}>{person.name}</li>)
+        }
       </ul>
     </div>
   )
