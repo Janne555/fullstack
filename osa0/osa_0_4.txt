@@ -1,0 +1,17 @@
+selain->palvelin: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note
+note over palvelin:
+Palvelin tallentaa post requestissa olevan todon tietokantaan
+end note
+note over selain:
+Selain päivittää näkymän
+end note
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes
+palvelin-->selain: 304 not modified
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+palvelin-->selain: 304 not modified
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+palvelin-->selain: 304 not modified
+selain->palvelin: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+palvelin-->selain: ...{"content":"testi","date":"2019-10-13T07:33:25.919Z"}]
+
+https://www.websequencediagrams.com/cgi-bin/cdraw?lz=c2VsYWluLT5wYWx2ZWxpbjogSFRUUCBQT1NUIGh0dHBzOi8vZnVsbHN0YWNrLWV4YW1wbGVhcHAuaGVyb2t1YXBwLmNvbS9uZXdfbm90ZQpub3RlIG92ZXIgAEkJClAAVQcgdGFsbGVudGFhIHBvc3QgcmVxdWVzdGlzc2Egb2xldmFuIHRvZG9uIHRpZXRva2FudGFhbgplbmQgAEwPAIEvBjoKUwCBOAUgcMOkaXZpdHTDpMOkIG7DpGt5bcOkAC4LAIFNF0dFAIE1Lm90ZXMKAIIgCC0tPgCAfwcgMzA0IG5vdCBtb2RpZmllZAApR21haW4uY3MAAnFqAHlsZGF0YS5qc29uAIJFFC4uLnsiY29udGVudCI6InRlc3RpIiwiZGF0ZSI6IjIwMTktMTAtMTNUMDc6MzM6MjUuOTE5WiJ9XQ&s=default
