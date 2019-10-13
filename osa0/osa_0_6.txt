@@ -1,0 +1,5 @@
+note over selain:
+Selain lisää uuden todon listalle riippumatta palvelimen vastauksesta
+end note
+selain->palvelin: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+palvelin-->selain: {"message":"note created"}
