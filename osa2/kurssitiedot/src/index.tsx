@@ -71,6 +71,6 @@ const Content = ({ parts }: ContentProps) => {
 
 const Part = ({ name, exercises }: PartType) => <p>{name} {exercises}</p>
 
-const Total = ({ numExercises }: { numExercises: number }) => <p>Number of exercises {numExercises}</p>
+const Total = ({ numExercises }: { numExercises: number }) => <b>total of {numExercises} exercises</b>
 
 ReactDOM.render(<App />, document.getElementById('root'))
