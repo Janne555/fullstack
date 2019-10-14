@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
+import DetailedCountry from './DetailedCountry'
 
-type Country = {
-  name: string
-  capital: string
-  population: number
-  languages: {
-    name: string
-  }[]
-  flag: string
-}
 
 const App = () => {
   const [countries, setCountries] = useState<Country[]>([])
@@ -54,14 +46,8 @@ const App = () => {
   )
 }
 
-type CountriesProps = {
-  countries: Country[]
-  onShow: (name: string) => void
-}
 
 function Countries({ countries, onShow }: CountriesProps) {
-
-
   if (countries.length > 10)
     return <p>Too many countries, specify another filter</p>
   if (countries.length > 1)
@@ -71,37 +57,11 @@ function Countries({ countries, onShow }: CountriesProps) {
   return <p>No countries found</p>
 }
 
-
-type CountryListProps = {
-  countries: Country[]
-  onShow: (name: string) => void
-}
-
 function CountryList({ countries, onShow }: CountryListProps) {
   return (
     <ul style={{ listStyleType: 'none' }}>
       {countries.map(({ name }) => <li key={name}>{name} <button onClick={() => onShow(name)}>show</button></li>)}
     </ul>
-  )
-}
-
-type DetailedCountryProps = {
-  country: Country
-}
-
-
-function DetailedCountry({ country: { capital, flag, languages, name, population } }: DetailedCountryProps) {
-  return (
-    <div>
-      <h1>{name}</h1>
-      <p>capital {capital}</p>
-      <p>population {population}</p>
-      <h2>languages</h2>
-      <ul>
-        {languages.map(({ name }) => <li key={name}>{name}</li>)}
-      </ul>
-      <img style={{ height: '100px', width: '100px' }} src={flag} alt={`flag of ${name}`} />
-    </div>
   )
 }
 
