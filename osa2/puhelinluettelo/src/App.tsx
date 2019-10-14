@@ -1,16 +1,31 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+
+type Person = {
+  name: string
+  number: string
+}
 
 const App = () => {
-  const [persons, setPersons] = useState<{ name: string, number: string }[]>([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ])
-
+  const [persons, setPersons] = useState<Person[]>([])
   const [newName, setNewName] = useState<string>('')
   const [newNumber, setNewNumber] = useState<string>('')
   const [filter, setFilter] = useState<string>('')
+
+  useEffect(() => {
+    let hasCanceled = false
+
+    axios.get<Person[]>('http://localhost:3001/persons')
+      .then((response) => {
+        if (!hasCanceled)
+          setPersons(response.data)
+      })
+      .catch(error => {
+        console.error(error)
+      })
+
+    return () => { hasCanceled = true }
+  }, [])
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
