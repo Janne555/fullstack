@@ -15,6 +15,7 @@ type Country = {
 const App = () => {
   const [countries, setCountries] = useState<Country[]>([])
   const [filter, setFilter] = useState<string>('')
+  const [filterOverride, setFilterOverride] = useState<string | undefined>()
 
   useEffect(() => {
     let hasCancelled = false
@@ -27,23 +28,44 @@ const App = () => {
     return () => { hasCancelled = true }
   }, [])
 
+  function handleShow(name: string) {
+    setFilterOverride(name)
+  }
+
+  function filterCountries() {
+    if (filterOverride) {
+      const result = countries.find(({ name }) => name === filterOverride)
+      if (result)
+        return [result]
+    }
+    return countries.filter(({ name }) => name.toLowerCase().includes(filter.toLowerCase()))
+  }
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setFilter(e.target.value)
+    setFilterOverride(undefined)
+  }
+
   return (
     <div>
-      find countries <input onChange={e => setFilter(e.target.value)} />
-      <Countries countries={countries.filter(({ name }) => name.toLowerCase().includes(filter.toLowerCase()))} />
+      find countries <input onChange={handleChange} />
+      <Countries countries={filterCountries()} onShow={handleShow} />
     </div >
   )
 }
 
 type CountriesProps = {
   countries: Country[]
+  onShow: (name: string) => void
 }
 
-function Countries({ countries }: CountriesProps) {
+function Countries({ countries, onShow }: CountriesProps) {
+
+
   if (countries.length > 10)
     return <p>Too many countries, specify another filter</p>
   if (countries.length > 1)
-    return <CountryList countries={countries} />
+    return <CountryList countries={countries} onShow={onShow} />
   if (countries.length === 1)
     return <DetailedCountry country={countries[0]} />
   return <p>No countries found</p>
@@ -52,12 +74,13 @@ function Countries({ countries }: CountriesProps) {
 
 type CountryListProps = {
   countries: Country[]
+  onShow: (name: string) => void
 }
 
-function CountryList({ countries }: CountryListProps) {
+function CountryList({ countries, onShow }: CountryListProps) {
   return (
     <ul style={{ listStyleType: 'none' }}>
-      {countries.map(({ name }) => <li key={name}>{name}</li>)}
+      {countries.map(({ name }) => <li key={name}>{name} <button onClick={() => onShow(name)}>show</button></li>)}
     </ul>
   )
 }
