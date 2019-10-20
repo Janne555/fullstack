@@ -1,36 +1,16 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-
-type Person = {
-  name: string
-  number: string
-}
+import React, { useState } from 'react'
+import { useContacts } from './contactService'
 
 const App = () => {
-  const [persons, setPersons] = useState<Person[]>([])
+  const [contacts, error, updateContact, createContact] = useContacts()
   const [newName, setNewName] = useState<string>('')
   const [newNumber, setNewNumber] = useState<string>('')
   const [filter, setFilter] = useState<string>('')
 
-  useEffect(() => {
-    let hasCanceled = false
-
-    axios.get<Person[]>('http://localhost:3001/persons')
-      .then((response) => {
-        if (!hasCanceled)
-          setPersons(response.data)
-      })
-      .catch(error => {
-        console.error(error)
-      })
-
-    return () => { hasCanceled = true }
-  }, [])
-
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (persons.every(person => person.name !== newName)) {
-      setPersons(prev => [...prev, { name: newName, number: newNumber }])
+    if (contacts && contacts.every(person => person.name !== newName)) {
+      createContact({ name: newName, number: newNumber })
       setNewName('')
       setNewNumber('')
     }
@@ -57,7 +37,7 @@ const App = () => {
       <h2>Add new</h2>
       <AddNew newName={newName} newNumber={newNumber} onNameChange={handleNameChange} onNumberChange={handleNumberChange} onSubmit={handleSubmit} />
       <h2>Numbers</h2>
-      <List persons={persons} filter={filter.toLowerCase()} />
+      {contacts && <List persons={contacts} filter={filter.toLowerCase()} />}
     </div>
   )
 }
