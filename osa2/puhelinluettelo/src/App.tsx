@@ -9,13 +9,19 @@ const App = () => {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (contacts && contacts.every(person => person.name !== newName)) {
-      createContact({ name: newName, number: newNumber })
+    if (contacts.every(person => person.name !== newName)) {
+      createContact({ name: newName, number: newNumber, id: 0 })
       setNewName('')
       setNewNumber('')
     }
-    else
-      alert(`${newName} is already in the phonebook`)
+    else {
+      const response = window.confirm(`${newName} is already in the phonebook, replace old phone number with new one`)
+      if (response) {
+        const contact = contacts.find(({ name }) => name === newName)
+        if (contact)
+          updateContact({ ...contact, number: newNumber })
+      }
+    }
   }
 
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -32,11 +38,12 @@ const App = () => {
 
   function handleDelete(contact: Contact) {
     const response = window.confirm(`Delete ${contact.name}`)
-    response && contact.id && deleteContact(contact.id)
+    response && deleteContact(contact.id)
   }
 
   return (
     <div>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <h2>Phonebook</h2>
       <Filter onChange={handleFilterChange} />
       <h2>Add new</h2>
@@ -89,7 +96,7 @@ const List = ({ filter, contacts, onDelete }: ListProps) => (
       contacts
         .filter(({ name }) => name.toLowerCase().includes(filter))
         .map(({ name, number, id }) => (
-          <li key={name}>{name}, {number}, <button onClick={() => onDelete({ name, number, id })}>delete</button></li>
+          <li key={id}>{name}, {number}, <button onClick={() => onDelete({ name, number, id })}>delete</button></li>
         ))}
   </ul>
 )

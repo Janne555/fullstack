@@ -22,8 +22,8 @@ export function deleteContact(id: number): Promise<Contact> {
     .then(response => response.data)
 }
 
-export function useContacts(): [Contact[] | undefined, string | undefined, (contact: Contact) => void, (contact: Contact) => void, (id: number) => void] {
-  const [contacts, setContacts] = useState<Contact[] | undefined>()
+export function useContacts(): [Contact[], string | undefined, (contact: Contact) => void, (contact: Contact) => void, (id: number) => void] {
+  const [contacts, setContacts] = useState<Contact[]>([])
   const [error, setError] = useState<string | undefined>()
   const [editedContact, setEditedContact] = useState<Contact | undefined>()
   const [newContact, setNewContact] = useState<Contact | undefined>()
@@ -54,7 +54,7 @@ export function useContacts(): [Contact[] | undefined, string | undefined, (cont
       putContact(editedContact)
         .then(responseContact => {
           if (!hasCanceled) {
-            setContacts(prev => prev ? [...prev, responseContact] : [responseContact])
+            setContacts(prev => [...prev.filter(({ id }) => id !== responseContact.id), responseContact])
             setEditedContact(undefined)
           }
         })
@@ -76,7 +76,7 @@ export function useContacts(): [Contact[] | undefined, string | undefined, (cont
       postContact(newContact)
         .then(responseContact => {
           if (!hasCanceled) {
-            setContacts(prev => prev ? [...prev, responseContact] : [responseContact])
+            setContacts(prev => [...prev, responseContact])
             setNewContact(undefined)
           }
         })
@@ -99,7 +99,7 @@ export function useContacts(): [Contact[] | undefined, string | undefined, (cont
       deleteContact(deletedContactId)
         .then(() => {
           if (!hasCanceled) {
-            setContacts(prev => prev ? prev.filter(({ id }) => id !== deletedContactId) : [])
+            setContacts(prev => prev.filter(({ id }) => id !== deletedContactId))
             setDeleteContactId(undefined)
           }
         })
