@@ -17,17 +17,17 @@ export function postContact(contact: Contact): Promise<Contact> {
     .then(response => response.data)
 }
 
-export function deleteContact(id: number): Promise<Contact> {
-  return axios.delete<Contact>(`${BASE_URL}/${id}`)
+export function deleteContact(contact: Contact): Promise<Contact> {
+  return axios.delete<Contact>(`${BASE_URL}/${contact.id}`)
     .then(response => response.data)
 }
 
-export function useContacts(): [Contact[], string | undefined, (contact: Contact) => void, (contact: Contact) => void, (id: number) => void] {
+export function useContacts(): [Contact[], { message: string, error: boolean } | undefined, (contact: Contact) => void, (contact: Contact) => void, (contact: Contact) => void] {
   const [contacts, setContacts] = useState<Contact[]>([])
-  const [error, setError] = useState<string | undefined>()
+  const [message, setMessage] = useState<{ message: string, error: boolean } | undefined>()
   const [editedContact, setEditedContact] = useState<Contact | undefined>()
   const [newContact, setNewContact] = useState<Contact | undefined>()
-  const [deletedContactId, setDeleteContactId] = useState<number | undefined>()
+  const [deletedContact, setDeleteContact] = useState<Contact | undefined>()
 
   useEffect(() => {
     let hasCanceled = false
@@ -41,9 +41,9 @@ export function useContacts(): [Contact[], string | undefined, (contact: Contact
         if (hasCanceled)
           return
         if (error instanceof Error)
-          setError(error.message)
+          setMessage({ message: error.message, error: true })
         else
-          setError("unable to fetch contacts")
+          setMessage({ message: "unable to fetch contacts", error: true })
       })
     return () => { hasCanceled = true }
   }, [])
@@ -56,15 +56,16 @@ export function useContacts(): [Contact[], string | undefined, (contact: Contact
           if (!hasCanceled) {
             setContacts(prev => [...prev.filter(({ id }) => id !== responseContact.id), responseContact])
             setEditedContact(undefined)
+            setMessage({ message: `Updated contact ${responseContact.name}`, error: false })
           }
         })
         .catch(error => {
           if (hasCanceled)
             return
           if (error instanceof Error)
-            setError(error.message)
+            setMessage({ message: error.message, error: true })
           else
-            setError("unable to put contact")
+            setMessage({ message: "unable to put contact", error: true })
         })
     }
     return () => { hasCanceled = true }
@@ -78,15 +79,16 @@ export function useContacts(): [Contact[], string | undefined, (contact: Contact
           if (!hasCanceled) {
             setContacts(prev => [...prev, responseContact])
             setNewContact(undefined)
+            setMessage({ message: `Created contact ${responseContact.name}`, error: false })
           }
         })
         .catch(error => {
           if (hasCanceled)
             return
           if (error instanceof Error)
-            setError(error.message)
+            setMessage({ message: error.message, error: true })
           else
-            setError("unable to store new contact")
+            setMessage({ message: "unable to store new contact", error: true })
         })
 
 
@@ -95,26 +97,31 @@ export function useContacts(): [Contact[], string | undefined, (contact: Contact
 
   useEffect(() => {
     let hasCanceled = false
-    if (deletedContactId)
-      deleteContact(deletedContactId)
+    if (deletedContact)
+      deleteContact(deletedContact)
         .then(() => {
           if (!hasCanceled) {
-            setContacts(prev => prev.filter(({ id }) => id !== deletedContactId))
-            setDeleteContactId(undefined)
+            setContacts(prev => prev.filter(({ id }) => id !== deletedContact.id))
+            setDeleteContact(undefined)
+            setMessage({ message: `Deleted contact ${deletedContact.name}`, error: false })
           }
         })
         .catch(error => {
-          if (hasCanceled)
-            return
-          if (error instanceof Error)
-            setError(error.message)
-          else
-            setError("unable to store new contact")
+          if (!hasCanceled)
+            setMessage({ message: `unable to delete contact ${deletedContact.name}`, error: true })
         })
 
 
     return () => { hasCanceled = true }
-  }, [deletedContactId])
+  }, [deletedContact])
 
-  return [contacts, error, setEditedContact, setNewContact, setDeleteContactId]
+  useEffect(() => {
+    let hasCanceled = false
+    if (message)
+      setTimeout(() => !hasCanceled && setMessage(undefined), 5000)
+
+    return () => { hasCanceled = true }
+  }, [message])
+
+  return [contacts, message, setEditedContact, setNewContact, setDeleteContact]
 }

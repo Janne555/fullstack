@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { useContacts } from './contactService'
+import Message from './Message'
 
 const App = () => {
-  const [contacts, error, updateContact, createContact, deleteContact] = useContacts()
+  const [contacts, message, updateContact, createContact, deleteContact] = useContacts()
   const [newName, setNewName] = useState<string>('')
   const [newNumber, setNewNumber] = useState<string>('')
   const [filter, setFilter] = useState<string>('')
@@ -38,13 +39,13 @@ const App = () => {
 
   function handleDelete(contact: Contact) {
     const response = window.confirm(`Delete ${contact.name}`)
-    response && deleteContact(contact.id)
+    response && deleteContact(contact)
   }
 
   return (
     <div>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
       <h2>Phonebook</h2>
+      {message && <Message {...message} />}
       <Filter onChange={handleFilterChange} />
       <h2>Add new</h2>
       <AddNew newName={newName} newNumber={newNumber} onNameChange={handleNameChange} onNumberChange={handleNumberChange} onSubmit={handleSubmit} />
