@@ -13,15 +13,21 @@ export function putContact(contact: Contact): Promise<Contact> {
 }
 
 export function postContact(contact: Contact): Promise<Contact> {
-  return axios.post<Contact>(`${BASE_URL}`, contact)
+  return axios.post<Contact>(BASE_URL, contact)
     .then(response => response.data)
 }
 
-export function useContacts(): [Contact[] | undefined, string | undefined, (contact: Contact) => void, (contacts: Contact) => void] {
+export function deleteContact(id: number): Promise<Contact> {
+  return axios.delete<Contact>(`${BASE_URL}/${id}`)
+    .then(response => response.data)
+}
+
+export function useContacts(): [Contact[] | undefined, string | undefined, (contact: Contact) => void, (contact: Contact) => void, (id: number) => void] {
   const [contacts, setContacts] = useState<Contact[] | undefined>()
   const [error, setError] = useState<string | undefined>()
   const [editedContact, setEditedContact] = useState<Contact | undefined>()
   const [newContact, setNewContact] = useState<Contact | undefined>()
+  const [deletedContactId, setDeleteContactId] = useState<number | undefined>()
 
   useEffect(() => {
     let hasCanceled = false
@@ -87,5 +93,28 @@ export function useContacts(): [Contact[] | undefined, string | undefined, (cont
     return () => { hasCanceled = true }
   }, [newContact])
 
-  return [contacts, error, setEditedContact, setNewContact]
+  useEffect(() => {
+    let hasCanceled = false
+    if (deletedContactId)
+      deleteContact(deletedContactId)
+        .then(() => {
+          if (!hasCanceled) {
+            setContacts(prev => prev ? prev.filter(({ id }) => id !== deletedContactId) : [])
+            setDeleteContactId(undefined)
+          }
+        })
+        .catch(error => {
+          if (hasCanceled)
+            return
+          if (error instanceof Error)
+            setError(error.message)
+          else
+            setError("unable to store new contact")
+        })
+
+
+    return () => { hasCanceled = true }
+  }, [deletedContactId])
+
+  return [contacts, error, setEditedContact, setNewContact, setDeleteContactId]
 }

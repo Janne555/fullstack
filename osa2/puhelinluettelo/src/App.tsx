@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useContacts } from './contactService'
 
 const App = () => {
-  const [contacts, error, updateContact, createContact] = useContacts()
+  const [contacts, error, updateContact, createContact, deleteContact] = useContacts()
   const [newName, setNewName] = useState<string>('')
   const [newNumber, setNewNumber] = useState<string>('')
   const [filter, setFilter] = useState<string>('')
@@ -30,6 +30,11 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  function handleDelete(contact: Contact) {
+    const response = window.confirm(`Delete ${contact.name}`)
+    response && contact.id && deleteContact(contact.id)
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -37,7 +42,7 @@ const App = () => {
       <h2>Add new</h2>
       <AddNew newName={newName} newNumber={newNumber} onNameChange={handleNameChange} onNumberChange={handleNumberChange} onSubmit={handleSubmit} />
       <h2>Numbers</h2>
-      {contacts && <List persons={contacts} filter={filter.toLowerCase()} />}
+      {contacts && <List contacts={contacts} filter={filter.toLowerCase()} onDelete={handleDelete} />}
     </div>
   )
 }
@@ -73,14 +78,19 @@ const AddNew = ({ newName, newNumber, onNameChange, onNumberChange, onSubmit }: 
 )
 
 type ListProps = {
-  persons: { name: string, number: string }[]
+  contacts: Contact[]
   filter: string
+  onDelete: (contact: Contact) => void
 }
 
-const List = ({ filter, persons }: ListProps) => (
+const List = ({ filter, contacts, onDelete }: ListProps) => (
   <ul>
     {
-      persons.filter(({ name }) => name.toLowerCase().includes(filter)).map(({ name, number }) => <li key={name}>{name}, {number}</li>)}
+      contacts
+        .filter(({ name }) => name.toLowerCase().includes(filter))
+        .map(({ name, number, id }) => (
+          <li key={name}>{name}, {number}, <button onClick={() => onDelete({ name, number, id })}>delete</button></li>
+        ))}
   </ul>
 )
 
