@@ -14,7 +14,7 @@ export default function DetailedCountry({ country: { capital, flag, languages, n
       <ul>
         {languages.map(({ name }) => <li key={name}>{name}</li>)}
       </ul>
-      <img style={{ height: '100px', width: '100px' }} src={flag} alt={`flag of ${name}`} />
+      <img style={{ height: '133px', width: '200px' }} src={flag} alt={`flag of ${name}`} />
       <h2>Weather in {name}</h2>
       {weather
         ? <WeatherInfo weather={weather} />
