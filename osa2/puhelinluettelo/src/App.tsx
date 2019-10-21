@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useContacts } from './contactService'
 import Message from './Message'
+import AddContact from './AddContact'
+import List from './List'
 
 const App = () => {
   const [contacts, message, updateContact, createContact, deleteContact] = useContacts()
@@ -48,7 +50,7 @@ const App = () => {
       {message && <Message {...message} />}
       <Filter onChange={handleFilterChange} />
       <h2>Add new</h2>
-      <AddNew newName={newName} newNumber={newNumber} onNameChange={handleNameChange} onNumberChange={handleNumberChange} onSubmit={handleSubmit} />
+      <AddContact newName={newName} newNumber={newNumber} onNameChange={handleNameChange} onNumberChange={handleNumberChange} onSubmit={handleSubmit} />
       <h2>Numbers</h2>
       {contacts && <List contacts={contacts} filter={filter.toLowerCase()} onDelete={handleDelete} />}
     </div>
@@ -62,44 +64,5 @@ const Filter = ({ onChange }: { onChange: (event: React.ChangeEvent<HTMLInputEle
     </>
   )
 }
-
-type AddNewProps = {
-  newName: string
-  newNumber: string
-  onNameChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  onNumberChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  onSubmit: (event: React.FormEvent) => void
-}
-
-const AddNew = ({ newName, newNumber, onNameChange, onNumberChange, onSubmit }: AddNewProps) => (
-  <form onSubmit={onSubmit}>
-    <div>
-      name: <input value={newName} onChange={onNameChange} />
-    </div>
-    <div>
-      number: <input value={newNumber} onChange={onNumberChange} />
-    </div>
-    <div>
-      <button type="submit">add</button>
-    </div>
-  </form>
-)
-
-type ListProps = {
-  contacts: Contact[]
-  filter: string
-  onDelete: (contact: Contact) => void
-}
-
-const List = ({ filter, contacts, onDelete }: ListProps) => (
-  <ul>
-    {
-      contacts
-        .filter(({ name }) => name.toLowerCase().includes(filter))
-        .map(({ name, number, id }) => (
-          <li key={id}>{name}, {number}, <button onClick={() => onDelete({ name, number, id })}>delete</button></li>
-        ))}
-  </ul>
-)
 
 export default App
