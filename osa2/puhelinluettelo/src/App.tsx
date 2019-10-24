@@ -13,7 +13,7 @@ const App = () => {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (contacts.every(person => person.name !== newName)) {
-      createContact({ name: newName, number: newNumber, id: 0 })
+      createContact({ name: newName, number: newNumber, id: "" })
       setNewName('')
       setNewNumber('')
     }
