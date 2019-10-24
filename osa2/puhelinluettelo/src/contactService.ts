@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-const BASE_URL = 'http://localhost:3001/persons'
+const BASE_URL = '/api/persons'
 
 export function getContacts(): Promise<Contact[]> {
   return axios.get<Contact[]>(BASE_URL)
