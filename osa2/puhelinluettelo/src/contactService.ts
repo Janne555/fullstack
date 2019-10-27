@@ -62,8 +62,8 @@ export function useContacts(): [Contact[], { message: string, error: boolean } |
         .catch(error => {
           if (hasCanceled)
             return
-          if (error instanceof Error)
-            setMessage({ message: error.message, error: true })
+          if (error.response && error.response.data)
+            setMessage({ message: error.response.data.error, error: true })
           else
             setMessage({ message: "unable to put contact", error: true })
         })
