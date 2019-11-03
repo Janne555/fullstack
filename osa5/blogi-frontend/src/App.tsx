@@ -7,6 +7,8 @@ import NewBlog from './componenets/NewBlog'
 import Blog from './componenets/Blog';
 import Togglable from './componenets/Togglable'
 
+export const UserContext = React.createContext<string>("")
+
 const App: React.FC = () => {
   const [user, setUser] = useState<Types.User | null>(null)
   const [message, setMessage] = useState<Types.Message | null>(null)
@@ -119,22 +121,24 @@ const App: React.FC = () => {
 
 
   return (
-    <div>
-      {message && <Message message={message} />}
-      {!user
-        ? <LoginForm onSubmit={handleLogin} />
-        : <div>
-          <h1>blogs</h1>
-          <h2>blogs for {user.username} <button onClick={handleLogout}>logout</button></h2>
-          <Togglable buttonLabel="new blog">
-            <NewBlog onSubmit={handleNewBlog} />
-          </Togglable>
-          {
-            blogs.map(blog => <Blog key={blog.id} blog={blog} onLike={handleLike} onRemove={handleRemove} />)
-          }
-        </div>
-      }
-    </div>
+    <UserContext.Provider value={user ? user.username : ""} >
+      <div>
+        {message && <Message message={message} />}
+        {!user
+          ? <LoginForm onSubmit={handleLogin} />
+          : <div>
+            <h1>blogs</h1>
+            <h2>blogs for {user.username} <button onClick={handleLogout}>logout</button></h2>
+            <Togglable buttonLabel="new blog">
+              <NewBlog onSubmit={handleNewBlog} />
+            </Togglable>
+            {
+              blogs.map(blog => <Blog key={blog.id} blog={blog} onLike={handleLike} onRemove={handleRemove} />)
+            }
+          </div>
+        }
+      </div>
+    </UserContext.Provider>
   );
 }
 

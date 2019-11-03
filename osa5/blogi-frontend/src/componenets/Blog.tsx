@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Blog as BlogType } from '../../types'
+import { UserContext } from '../App'
 
 type Props = {
   blog: BlogType,
@@ -17,6 +18,7 @@ const blogStyle = {
 
 export default function Blog({ blog, onLike, onRemove }: Props) {
   const [visible, setVisible] = useState(false)
+  const currentUser = useContext(UserContext)
 
   return (
     <div style={blogStyle}>
@@ -26,7 +28,7 @@ export default function Blog({ blog, onLike, onRemove }: Props) {
           <div>{blog.url}</div>
           <div>{blog.likes} likes <button onClick={() => onLike(blog)}>like</button></div>
           <div>added by {blog.user.username}</div>
-          <button onClick={() => onRemove(blog)}>remove</button>
+          {currentUser === blog.user.username && <button onClick={() => onRemove(blog)}>remove</button>}
         </div>
       }
     </div>
