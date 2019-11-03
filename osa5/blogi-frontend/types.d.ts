@@ -20,3 +20,5 @@ export type Blog = {
   likes: number
   id: string
 }
+
+export type NewBlog = Omit<Blog, 'likes' | 'id'>
