@@ -22,3 +22,6 @@ export function putBlog(blog: Blog, token: string) {
   return axios.put(`${BLOGS_URL}/${blog.id}`, blog, { headers: { Authorization: `Bearer ${token}` } })
 }
 
+export function removeBlog(blog: Blog, token: string) {
+  return axios.delete(`${BLOGS_URL}/${blog.id}`, { headers: { Authorization: `Bearer ${token}` } })
+}

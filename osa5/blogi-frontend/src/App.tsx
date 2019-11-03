@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Message from './componenets/Message'
 import * as Types from '../types'
 import LoginForm from './componenets/LoginForm';
-import { login, createBlog, getBlogs, putBlog } from './services/services';
+import { login, createBlog, getBlogs, putBlog, removeBlog } from './services/services';
 import NewBlog from './componenets/NewBlog'
 import Blog from './componenets/Blog';
 import Togglable from './componenets/Togglable'
@@ -97,6 +97,27 @@ const App: React.FC = () => {
     }
   }
 
+  async function handleRemove(blog: Types.Blog) {
+    if (!user)
+      return
+
+    const ok = window.confirm(`remove blog ${blog.title} by ${blog.author}`)
+    if (!ok)
+      return
+
+    try {
+      await removeBlog(blog, user.token)
+      setRefreshBlogs(true)
+      setMessage({ content: `removed blog "${blog.title}"` })
+      setTimeout(() => setMessage(null), 5000)
+    } catch (error) {
+      console.error(error)
+      setMessage({ content: error.message, error: true })
+      setTimeout(() => setMessage(null), 5000)
+    }
+  }
+
+
   return (
     <div>
       {message && <Message message={message} />}
@@ -109,7 +130,7 @@ const App: React.FC = () => {
             <NewBlog onSubmit={handleNewBlog} />
           </Togglable>
           {
-            blogs.map(blog => <Blog key={blog.id} blog={blog} onLike={handleLike} />)
+            blogs.map(blog => <Blog key={blog.id} blog={blog} onLike={handleLike} onRemove={handleRemove} />)
           }
         </div>
       }

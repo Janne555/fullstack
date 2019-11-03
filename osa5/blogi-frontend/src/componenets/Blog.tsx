@@ -4,6 +4,7 @@ import { Blog as BlogType } from '../../types'
 type Props = {
   blog: BlogType,
   onLike: (blog: BlogType) => void
+  onRemove: (blog: BlogType) => void
 }
 
 const blogStyle = {
@@ -14,7 +15,7 @@ const blogStyle = {
   marginBottom: 5
 }
 
-export default function Blog({ blog, onLike }: Props) {
+export default function Blog({ blog, onLike, onRemove }: Props) {
   const [visible, setVisible] = useState(false)
 
   return (
@@ -25,6 +26,7 @@ export default function Blog({ blog, onLike }: Props) {
           <div>{blog.url}</div>
           <div>{blog.likes} likes <button onClick={() => onLike(blog)}>like</button></div>
           <div>added by {blog.user.username}</div>
+          <button onClick={() => onRemove(blog)}>remove</button>
         </div>
       }
     </div>
