@@ -19,6 +19,7 @@ const App: React.FC = () => {
       getBlogs(user.token)
         .then(blogs => {
           if (!cancelled && refreshBlogs) {
+            blogs.sort((a, b) => b.likes - a.likes)
             setBlogs(blogs)
             setRefreshBlogs(false)
           }
@@ -87,7 +88,7 @@ const App: React.FC = () => {
     try {
       await putBlog(blog, user.token)
       setRefreshBlogs(true)
-      setMessage({ content: `liked blog "${blog.title}"`})
+      setMessage({ content: `liked blog "${blog.title}"` })
       setTimeout(() => setMessage(null), 5000)
     } catch (error) {
       console.error(error)
