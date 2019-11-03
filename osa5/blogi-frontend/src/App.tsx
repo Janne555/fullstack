@@ -5,6 +5,7 @@ import LoginForm from './componenets/LoginForm';
 import { login, createBlog, getBlogs } from './services/services';
 import NewBlog from './componenets/NewBlog'
 import Blog from './componenets/Blog';
+import Togglable from './componenets/Togglable'
 
 const App: React.FC = () => {
   const [user, setUser] = useState<Types.User | null>(null)
@@ -83,7 +84,9 @@ const App: React.FC = () => {
         : <div>
           <h1>blogs</h1>
           <h2>blogs for {user.username} <button onClick={handleLogout}>logout</button></h2>
-          <NewBlog onSubmit={handleNewBlog} />
+          <Togglable buttonLabel="new blog">
+            <NewBlog onSubmit={handleNewBlog} />
+          </Togglable>
           {
             blogs.map(blog => <Blog key={blog.id} blog={blog} />)
           }
