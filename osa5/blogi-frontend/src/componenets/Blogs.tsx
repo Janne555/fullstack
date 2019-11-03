@@ -5,10 +5,11 @@ import { getBlogs } from '../services/services'
 import Blog from './Blog'
 
 type Props = {
-  user: User
+  user: User,
+  onLogout: () => void
 }
 
-export default function Blogs({ user }: Props) {
+export default function Blogs({ user, onLogout }: Props) {
   const [blogs, setBlogs] = useState<BlogType[]>([])
 
   useEffect(() => {
@@ -26,6 +27,7 @@ export default function Blogs({ user }: Props) {
     <div>
       <h1>blogs</h1>
       <h2>blogs for {user.username}</h2>
+      <button onClick={onLogout}>logout</button>
       {
         blogs.map(blog => <Blog key={blog.id} blog={blog} />)
       }
