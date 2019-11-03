@@ -43,9 +43,14 @@ const App: React.FC = () => {
       window.localStorage.setItem('token', user.token)
       window.localStorage.setItem('userName', user.username)
     } catch (error) {
+      if (error.message.includes("401")) {
+        setMessage({ content: "wrong username or password", error: true })
+        setTimeout(() => setMessage(null), 5000)
+      } else {
+        setMessage({ content: error.message, error: true })
+        setTimeout(() => setMessage(null), 5000)
+      }
       console.error(error)
-      setMessage({ content: error.message, error: true })
-      setTimeout(() => setMessage(null), 5000)
     }
   }
 
@@ -55,6 +60,8 @@ const App: React.FC = () => {
     try {
       const result: Types.Blog = await createBlog(newblog, user.token)
       setBlogs(prev => prev.concat(result))
+      setMessage({ content: `a new blog ${newblog.title} by ${newblog.author} added` })
+      setTimeout(() => setMessage(null), 5000)
     } catch (error) {
       console.error()
       setMessage({ content: error.message, error: true })

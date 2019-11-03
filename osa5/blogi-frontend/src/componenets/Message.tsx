@@ -7,7 +7,7 @@ type Props = {
 
 export default function Message({ message: { content, error } }: Props) {
   return (
-    <div style={{ backgroundColor: error ? "red" : "green" }}>
+    <div style={{ color: error ? "red" : "green", backgroundColor: "grey", border: `solid 3px ${error ? "red" : "green"}`, padding: "1em" }}>
       {content}
     </div>
   )
