@@ -19,6 +19,9 @@ export type Blog = {
   url: string
   likes: number
   id: string
+  user: {
+    username: string
+  }
 }
 
-export type NewBlog = Omit<Blog, 'likes' | 'id'>
+export type NewBlog = Omit<Blog, 'likes' | 'id' | 'user'>
