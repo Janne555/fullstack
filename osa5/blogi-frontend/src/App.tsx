@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Message from './componenets/Message'
 import * as Types from '../types'
 import LoginForm from './componenets/LoginForm';
-import { login, createBlog, getBlogs } from './services/services';
+import { login, createBlog, getBlogs, putBlog } from './services/services';
 import NewBlog from './componenets/NewBlog'
 import Blog from './componenets/Blog';
 import Togglable from './componenets/Togglable'
@@ -11,19 +11,22 @@ const App: React.FC = () => {
   const [user, setUser] = useState<Types.User | null>(null)
   const [message, setMessage] = useState<Types.Message | null>(null)
   const [blogs, setBlogs] = useState<Types.Blog[]>([])
+  const [refreshBlogs, setRefreshBlogs] = useState(true)
 
   useEffect(() => {
     let cancelled = false
     if (user) {
       getBlogs(user.token)
         .then(blogs => {
-          if (!cancelled)
+          if (!cancelled && refreshBlogs) {
             setBlogs(blogs)
+            setRefreshBlogs(false)
+          }
         })
         .catch(console.error)
     }
     return () => { cancelled = true }
-  }, [user])
+  }, [user, refreshBlogs])
 
   useEffect(() => {
     let cancelled = false
@@ -76,6 +79,23 @@ const App: React.FC = () => {
     setUser(null)
   }
 
+  async function handleLike(blog: Types.Blog) {
+    if (!user)
+      return
+    blog.likes = blog.likes + 1
+
+    try {
+      await putBlog(blog, user.token)
+      setRefreshBlogs(true)
+      setMessage({ content: `liked blog "${blog.title}"`})
+      setTimeout(() => setMessage(null), 5000)
+    } catch (error) {
+      console.error(error)
+      setMessage({ content: error.message, error: true })
+      setTimeout(() => setMessage(null), 5000)
+    }
+  }
+
   return (
     <div>
       {message && <Message message={message} />}
@@ -88,7 +108,7 @@ const App: React.FC = () => {
             <NewBlog onSubmit={handleNewBlog} />
           </Togglable>
           {
-            blogs.map(blog => <Blog key={blog.id} blog={blog} />)
+            blogs.map(blog => <Blog key={blog.id} blog={blog} onLike={handleLike} />)
           }
         </div>
       }
