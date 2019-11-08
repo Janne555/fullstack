@@ -1,8 +1,13 @@
 import React, { useState } from 'react'
 import { Credentials } from '../../types'
+import PropTypes from 'prop-types'
 
 type Props = {
   onSubmit: (credentials: Credentials) => void
+}
+
+LoginForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired
 }
 
 const style: React.CSSProperties = {
