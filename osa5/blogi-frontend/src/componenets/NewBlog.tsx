@@ -11,12 +11,12 @@ const style: React.CSSProperties = {
   width: '200px'
 }
 
-export default function NewBlog({ onSubmit }: Props) {
+export default function NewBlog({ onSubmit }: Props): JSX.Element {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault()
     onSubmit({ title, author, url })
     setTitle('')
@@ -24,7 +24,7 @@ export default function NewBlog({ onSubmit }: Props) {
     setUrl('')
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
     if (e.target.id === 'title')
       return setTitle(e.target.value)
     if (e.target.id === 'author')

@@ -11,7 +11,8 @@ module.exports = {
   ],
   "parserOptions": {
     "ecmaFeatures": {
-      "jsx": true
+      "jsx": true,
+      "tsx": true,
     },
     "ecmaVersion": 2018,
     "sourceType": "module"
@@ -45,6 +46,11 @@ module.exports = {
       "error", { "before": true, "after": true }
     ],
     "no-console": 0,
-    "react/prop-types": 0,
+    "react/prop-types": 0
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 };

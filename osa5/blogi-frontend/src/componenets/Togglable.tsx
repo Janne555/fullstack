@@ -5,10 +5,10 @@ type Props = {
   buttonLabel: string;
 }
 
-export default function Togglable({ children, buttonLabel }: Props) {
+export default function Togglable({ children, buttonLabel }: Props): JSX.Element {
   const [visible, setVisible] = useState(false)
 
-  function toggleVisibility() {
+  function toggleVisibility(): void {
     setVisible(prev => !prev)
   }
 

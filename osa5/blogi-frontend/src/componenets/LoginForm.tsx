@@ -6,20 +6,16 @@ type Props = {
   onSubmit: (credentials: Credentials) => void;
 }
 
-LoginForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired
-}
-
 const style: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   width: '200px'
 }
 
-export default function LoginForm({ onSubmit }: Props) {
+export default function LoginForm({ onSubmit }: Props): JSX.Element {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault()
     onSubmit({ username, password })
     setUsername('')
@@ -49,4 +45,8 @@ export default function LoginForm({ onSubmit }: Props) {
       </form>
     </div>
   )
+}
+
+LoginForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired
 }

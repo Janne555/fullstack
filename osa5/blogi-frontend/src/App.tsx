@@ -28,7 +28,7 @@ const App: React.FC = () => {
         })
         .catch(console.error)
     }
-    return () => { cancelled = true }
+    return (): void => { cancelled = true }
   }, [user, refreshBlogs])
 
   useEffect(() => {
@@ -37,10 +37,10 @@ const App: React.FC = () => {
     const username = window.localStorage.getItem('userName')
     if (token && username)
       !cancelled && setUser({ username, token })
-    return () => { cancelled = true }
+    return (): void => { cancelled = true }
   }, [])
 
-  async function handleLogin(credentials: Types.Credentials) {
+  async function handleLogin(credentials: Types.Credentials): Promise<void> {
     try {
       const user = await login(credentials)
       setUser(user)
@@ -61,7 +61,7 @@ const App: React.FC = () => {
     }
   }
 
-  async function handleNewBlog(newblog: Types.NewBlog) {
+  async function handleNewBlog(newblog: Types.NewBlog): Promise<void> {
     if (!user)
       return
     try {
@@ -76,13 +76,13 @@ const App: React.FC = () => {
     }
   }
 
-  function handleLogout() {
+  function handleLogout(): void {
     window.localStorage.setItem('token', '')
     window.localStorage.setItem('userName', '')
     setUser(null)
   }
 
-  async function handleLike(blog: Types.Blog) {
+  async function handleLike(blog: Types.Blog): Promise<void> {
     if (!user)
       return
     blog.likes = blog.likes + 1
@@ -99,7 +99,7 @@ const App: React.FC = () => {
     }
   }
 
-  async function handleRemove(blog: Types.Blog) {
+  async function handleRemove(blog: Types.Blog): Promise<void> {
     if (!user)
       return
 
