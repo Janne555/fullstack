@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import Message from './componenets/Message'
+import Message from './components/Message'
 import * as Types from '../types'
-import LoginForm from './componenets/LoginForm'
+import LoginForm from './components/LoginForm'
 import { login, createBlog, getBlogs, putBlog, removeBlog } from './services/services'
-import NewBlog from './componenets/NewBlog'
-import Blog from './componenets/Blog'
-import Togglable from './componenets/Togglable'
+import NewBlog from './components/NewBlog'
+import Blog from './components/Blog'
+import Togglable from './components/Togglable'
 
 export const UserContext = React.createContext<string>('')
 
