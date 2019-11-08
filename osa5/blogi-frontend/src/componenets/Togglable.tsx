@@ -1,8 +1,8 @@
 import React, { useState, CSSProperties, ReactNode } from 'react'
 
 type Props = {
-  children: ReactNode
-  buttonLabel: string
+  children: ReactNode;
+  buttonLabel: string;
 }
 
 export default function Togglable({ children, buttonLabel }: Props) {
@@ -12,8 +12,8 @@ export default function Togglable({ children, buttonLabel }: Props) {
     setVisible(prev => !prev)
   }
 
-  const hideWhenVisible: CSSProperties = { display: visible ? "none" : "" }
-  const showWhenVisible: CSSProperties = { display: visible ? "" : "none" }
+  const hideWhenVisible: CSSProperties = { display: visible ? 'none' : '' }
+  const showWhenVisible: CSSProperties = { display: visible ? '' : 'none' }
 
   return (
     <div>

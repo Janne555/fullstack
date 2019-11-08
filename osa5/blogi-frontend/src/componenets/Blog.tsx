@@ -4,9 +4,9 @@ import { UserContext } from '../App'
 import PropTypes from 'prop-types'
 
 type Props = {
-  blog: BlogType,
-  onLike: (blog: BlogType) => void
-  onRemove: (blog: BlogType) => void
+  blog: BlogType;
+  onLike: (blog: BlogType) => void;
+  onRemove: (blog: BlogType) => void;
 }
 
 Blog.propTypes = {

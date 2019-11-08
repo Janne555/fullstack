@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import Message from './componenets/Message'
 import * as Types from '../types'
-import LoginForm from './componenets/LoginForm';
-import { login, createBlog, getBlogs, putBlog, removeBlog } from './services/services';
+import LoginForm from './componenets/LoginForm'
+import { login, createBlog, getBlogs, putBlog, removeBlog } from './services/services'
 import NewBlog from './componenets/NewBlog'
-import Blog from './componenets/Blog';
+import Blog from './componenets/Blog'
 import Togglable from './componenets/Togglable'
 
-export const UserContext = React.createContext<string>("")
+export const UserContext = React.createContext<string>('')
 
 const App: React.FC = () => {
   const [user, setUser] = useState<Types.User | null>(null)
@@ -50,8 +50,8 @@ const App: React.FC = () => {
       window.localStorage.setItem('token', user.token)
       window.localStorage.setItem('userName', user.username)
     } catch (error) {
-      if (error.message.includes("401")) {
-        setMessage({ content: "wrong username or password", error: true })
+      if (error.message.includes('401')) {
+        setMessage({ content: 'wrong username or password', error: true })
         setTimeout(() => setMessage(null), 5000)
       } else {
         setMessage({ content: error.message, error: true })
@@ -77,8 +77,8 @@ const App: React.FC = () => {
   }
 
   function handleLogout() {
-    window.localStorage.setItem('token', "")
-    window.localStorage.setItem('userName', "")
+    window.localStorage.setItem('token', '')
+    window.localStorage.setItem('userName', '')
     setUser(null)
   }
 
@@ -121,7 +121,7 @@ const App: React.FC = () => {
 
 
   return (
-    <UserContext.Provider value={user ? user.username : ""} >
+    <UserContext.Provider value={user ? user.username : ''} >
       <div>
         {message && <Message message={message} />}
         {!user
@@ -139,7 +139,7 @@ const App: React.FC = () => {
         }
       </div>
     </UserContext.Provider>
-  );
+  )
 }
 
-export default App;
+export default App
