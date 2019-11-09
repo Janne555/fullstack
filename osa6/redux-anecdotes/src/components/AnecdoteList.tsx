@@ -4,7 +4,7 @@ import { StateType } from '../store'
 import { Anecdote } from '../types'
 import { setNotification } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
-import { Dispatch } from 'redux'
+import { ThunkDispatch } from 'redux-thunk'
 
 const mapStateToProps = (state: StateType) => {
   return {
@@ -12,11 +12,11 @@ const mapStateToProps = (state: StateType) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<StateType, undefined, any>) => {
   return {
-    vote: ({ id, content }: Anecdote) => {
-      dispatch(doVote(id))
-      dispatch(setNotification(`You voted '${content}'`))
+    vote: (anecdote: Anecdote) => {
+      dispatch(doVote(anecdote))
+      dispatch(setNotification(`You voted '${anecdote.content}'`))
       setTimeout(() => {
         dispatch(setNotification(''))
       }, 5000);

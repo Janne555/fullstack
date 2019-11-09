@@ -1,6 +1,6 @@
-export type VoteAction = {
-  type: "VOTE"
-  id: string
+export type UpdateAction = {
+  type: "UPDATE"
+  anecdote: Anecdote
 }
 
 export type InitAction = {
