@@ -1,4 +1,4 @@
-import { ReducerAction, Anecdote } from '../types'
+import { VoteAction, Anecdote, NewAnecdoteAction } from '../types'
 
 const anecdotesAtStart = [
   'If it hurts, do it more often',
@@ -9,7 +9,7 @@ const anecdotesAtStart = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ]
 
-const getId = () => (100000 * Math.random()).toFixed(0)
+export const getId = () => (100000 * Math.random()).toFixed(0)
 
 const asObject = (anecdote: string): Anecdote => {
   return {
@@ -21,7 +21,7 @@ const asObject = (anecdote: string): Anecdote => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
-const reducer = (state = initialState, action: ReducerAction) => {
+const reducer = (state = initialState, action: VoteAction | NewAnecdoteAction) => {
   switch (action.type) {
     case 'VOTE':
       {
@@ -31,6 +31,11 @@ const reducer = (state = initialState, action: ReducerAction) => {
         let copy = [...state]
         copy[index] = { ...state[index], votes: state[index].votes + 1 }
         return copy
+      }
+    case 'NEW':
+      {
+        const { type, ...anecdote } = action
+        return state.concat(anecdote)
       }
   }
 
