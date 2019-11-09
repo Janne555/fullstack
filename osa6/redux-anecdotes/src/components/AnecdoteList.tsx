@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function AnecdoteList({ store }: Props): ReactElement {
-  const anecdotes = store.getState()
+  const anecdotes = store.getState().anecdotes
 
   const vote = (id: string) => {
     store.dispatch(doVote(id))

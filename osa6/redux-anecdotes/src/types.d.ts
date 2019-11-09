@@ -10,6 +10,11 @@ export type NewAnecdoteAction = {
   votes: number
 }
 
+export type SetNotificationAction = {
+  type: "SET_NOTIFICATION"
+  content: string
+}
+
 export type Anecdote = {
   content: string
   id: string
