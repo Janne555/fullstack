@@ -31,4 +31,4 @@ function AnecdoteForm({ onSubmit }: ReturnType<typeof mapDispatchToProps>) {
   )
 }
 
-export default connect(null, mapDispatchToProps)(AnecdoteForm)
+export default connect(mapDispatchToProps, mapDispatchToProps)(AnecdoteForm)
