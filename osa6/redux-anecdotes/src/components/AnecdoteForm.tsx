@@ -1,6 +1,7 @@
 import React from 'react'
 import { StoreType } from '../index'
 import { doCreate } from '../reducers/anecdoteReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
 export default function AnecdoteForm({ store }: { store: StoreType }) {
 
@@ -8,7 +9,11 @@ export default function AnecdoteForm({ store }: { store: StoreType }) {
     e.preventDefault()
     Object.defineProperty(e.target, "note", String)
     store.dispatch(doCreate(e.target.anecdote.value))
+    store.dispatch(setNotification(`You created '${e.target.anecdote.value}'`))
     e.target.anecdote.value = ''
+    setTimeout(() => {
+      store.dispatch(setNotification(''))
+    }, 5000);
   }
 
   return (
