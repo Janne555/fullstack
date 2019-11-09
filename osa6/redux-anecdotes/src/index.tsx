@@ -5,6 +5,7 @@ import App from './App'
 import anecdoteReducer from './reducers/anecdoteReducer'
 import notificationReducer from './reducers/notificationReducer'
 import filterReducer from './reducers/filterReducer'
+import { Provider } from 'react-redux'
 
 const reducer = combineReducers({
   anecdotes: anecdoteReducer,
@@ -14,10 +15,13 @@ const reducer = combineReducers({
 
 const store = createStore(reducer)
 export type StoreType = typeof store
+export type StateType = ReturnType<typeof reducer>
 
 const render = () => {
   ReactDOM.render(
-    <App store={store} />,
+    <Provider store={store}>
+      <App store={store} />
+    </Provider >,
     document.getElementById('root')
   )
 }

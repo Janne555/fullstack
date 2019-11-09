@@ -1,15 +1,21 @@
 import React, { ReactElement } from 'react'
 import { doVote } from '../reducers/anecdoteReducer'
-import { StoreType } from '..'
+import { StoreType, StateType } from '..'
 import { Anecdote } from '../types'
 import { setNotification } from '../reducers/notificationReducer'
+import { connect } from 'react-redux'
 
-interface Props {
-  store: StoreType
+const mapStateToProps = (state: StateType) => {
+  return {
+    anecdotes: state.anecdotes,
+    filter: state.filter
+  }
 }
 
-export default function AnecdoteList({ store }: Props): ReactElement {
-  const anecdotes = store.getState().anecdotes.filter(({ content }) => content.toLowerCase().includes(store.getState().filter.toLowerCase()))
+type Props = ReturnType<typeof mapStateToProps> & { store: StoreType }
+
+function AnecdoteList({ anecdotes, filter, store }: Props): ReactElement {
+  const filteredAnecdotes = anecdotes.filter(({ content }) => content.toLowerCase().includes(filter.toLowerCase()))
 
   const vote = ({ id, content }: Anecdote) => {
     store.dispatch(doVote(id))
@@ -21,7 +27,7 @@ export default function AnecdoteList({ store }: Props): ReactElement {
 
   return (
     <>
-      {anecdotes.map(anecdote =>
+      {filteredAnecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -35,3 +41,5 @@ export default function AnecdoteList({ store }: Props): ReactElement {
     </>
   )
 }
+
+export default connect(mapStateToProps)(AnecdoteList)
