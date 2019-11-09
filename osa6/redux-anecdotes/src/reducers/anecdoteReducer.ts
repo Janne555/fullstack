@@ -1,8 +1,13 @@
 import { VoteAction, Anecdote, NewAnecdoteAction } from '../types'
+import Axios from 'axios'
 
 export const getId = () => (100000 * Math.random()).toFixed(0)
 
-export const doCreate = (content: string): NewAnecdoteAction => ({ type: "NEW", id: getId(), content, votes: 0 })
+export const doCreate = (content: string): NewAnecdoteAction => {
+  const anecdote = { id: getId(), content, votes: 0 }
+  Axios.post('http://localhost:3001/anecdotes', anecdote)
+  return { type: "NEW", ...anecdote }
+}
 export const doVote = (id: string): VoteAction => ({ id, type: "VOTE" })
 
 
