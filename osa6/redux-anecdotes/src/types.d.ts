@@ -15,6 +15,11 @@ export type SetNotificationAction = {
   content: string
 }
 
+export type SetFilterAction = {
+  type: "SET_FILTER"
+  content: string
+}
+
 export type Anecdote = {
   content: string
   id: string

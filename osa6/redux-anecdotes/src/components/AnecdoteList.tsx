@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function AnecdoteList({ store }: Props): ReactElement {
-  const anecdotes = store.getState().anecdotes
+  const anecdotes = store.getState().anecdotes.filter(({ content }) => content.toLowerCase().includes(store.getState().filter.toLowerCase()))
 
   const vote = ({ id, content }: Anecdote) => {
     store.dispatch(doVote(id))
