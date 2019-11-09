@@ -1,44 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Message from './components/Message'
 import * as Types from '../types'
 import LoginForm from './components/LoginForm'
-import { login, createBlog, getBlogs, putBlog, removeBlog } from './services/services'
+import { login } from './services/services'
 import NewBlog from './components/NewBlog'
 import Blog from './components/Blog'
 import Togglable from './components/Togglable'
+import { useResource } from './hooks/useResource'
 
 export const UserContext = React.createContext<string>('')
 
 const App: React.FC = () => {
   const [user, setUser] = useState<Types.User | null>(null)
   const [message, setMessage] = useState<Types.Message | null>(null)
-  const [blogs, setBlogs] = useState<Types.Blog[]>([])
-  const [refreshBlogs, setRefreshBlogs] = useState(true)
-
-  useEffect(() => {
-    let cancelled = false
-    if (user) {
-      getBlogs(user.token)
-        .then(blogs => {
-          if (!cancelled && refreshBlogs) {
-            blogs.sort((a, b) => b.likes - a.likes)
-            setBlogs(blogs)
-            setRefreshBlogs(false)
-          }
-        })
-        .catch(console.error)
-    }
-    return (): void => { cancelled = true }
-  }, [user, refreshBlogs])
-
-  useEffect(() => {
-    let cancelled = false
-    const token = window.localStorage.getItem('token')
-    const username = window.localStorage.getItem('userName')
-    if (token && username)
-      !cancelled && setUser({ username, token })
-    return (): void => { cancelled = true }
-  }, [])
+  const [blogs, blogService] = useResource<Types.Blog, Types.NewBlog>('/api/blog')
 
   async function handleLogin(credentials: Types.Credentials): Promise<void> {
     try {
@@ -65,8 +40,7 @@ const App: React.FC = () => {
     if (!user)
       return
     try {
-      const result: Types.Blog = await createBlog(newblog, user.token)
-      setBlogs(prev => prev.concat(result))
+      await blogService.create(newblog)
       setMessage({ content: `a new blog ${newblog.title} by ${newblog.author} added` })
       setTimeout(() => setMessage(null), 5000)
     } catch (error) {
@@ -88,8 +62,7 @@ const App: React.FC = () => {
     blog.likes = blog.likes + 1
 
     try {
-      await putBlog(blog, user.token)
-      setRefreshBlogs(true)
+      await blogService.update(blog)
       setMessage({ content: `liked blog "${blog.title}"` })
       setTimeout(() => setMessage(null), 5000)
     } catch (error) {
@@ -108,8 +81,7 @@ const App: React.FC = () => {
       return
 
     try {
-      await removeBlog(blog, user.token)
-      setRefreshBlogs(true)
+      await blogService.remove(blog)
       setMessage({ content: `removed blog "${blog.title}"` })
       setTimeout(() => setMessage(null), 5000)
     } catch (error) {
