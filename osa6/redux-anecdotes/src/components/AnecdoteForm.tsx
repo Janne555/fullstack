@@ -11,11 +11,8 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<StateType, undefined, any>) 
       e.preventDefault()
       Object.defineProperty(e.target, "note", String)
       dispatch(doCreate(e.target.anecdote.value))
-      dispatch(setNotification(`You created '${e.target.anecdote.value}'`))
+      dispatch(setNotification(`You created '${e.target.anecdote.value}'`, 5000))
       e.target.anecdote.value = ''
-      setTimeout(() => {
-        dispatch(setNotification(''))
-      }, 5000);
     }
   }
 }

@@ -16,10 +16,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<StateType, undefined, any>) 
   return {
     vote: (anecdote: Anecdote) => {
       dispatch(doVote(anecdote))
-      dispatch(setNotification(`You voted '${anecdote.content}'`))
-      setTimeout(() => {
-        dispatch(setNotification(''))
-      }, 5000);
+      dispatch(setNotification(`You voted '${anecdote.content}'`, 5000))
     }
   }
 }
