@@ -1,10 +1,11 @@
 import React from 'react'
 import { doCreate } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
-import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
+import { ThunkDispatch } from 'redux-thunk'
+import { StateType } from '../store'
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<StateType, undefined, any>) => {
   return {
     onSubmit: (e: any) => {
       e.preventDefault()

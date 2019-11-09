@@ -1,12 +1,16 @@
 import { VoteAction, Anecdote, NewAnecdoteAction, InitAction } from '../types'
 import Axios from 'axios'
+import { ThunkDispatch } from 'redux-thunk'
+import { StateType } from '../store'
+import { Dispatch } from 'redux'
 
 export const getId = () => (100000 * Math.random()).toFixed(0)
 
-export const doCreate = (content: string): NewAnecdoteAction => {
-  const anecdote = { id: getId(), content, votes: 0 }
-  Axios.post('http://localhost:3001/anecdotes', anecdote)
-  return { type: "NEW", ...anecdote }
+export const doCreate = (content: string): (dispatch: ThunkDispatch<StateType, undefined, NewAnecdoteAction>) => Promise<void> => {
+  return async (dispatch: Dispatch) => {
+    const { data: anecdote } = await Axios.post<Anecdote>('http://localhost:3001/anecdotes', { content, votes: 0 })
+    dispatch({ type: "NEW", ...anecdote })
+  }
 }
 export const doVote = (id: string): VoteAction => ({ id, type: "VOTE" })
 
