@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Credentials } from '../../types'
 import PropTypes from 'prop-types'
+import { useField } from '../hooks'
 
 type Props = {
   onSubmit: (credentials: Credentials) => void;
@@ -13,20 +14,12 @@ const style: React.CSSProperties = {
 }
 
 export default function LoginForm({ onSubmit }: Props): JSX.Element {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const userName = useField('text')
+  const password = useField('password')
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault()
-    onSubmit({ username, password })
-    setUsername('')
-    setPassword('')
-  }
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    if (e.target.id === 'username')
-      return setUsername(e.target.value)
-    if (e.target.id === 'password')
-      return setPassword(e.target.value)
+    onSubmit({ username: userName.value, password: password.value })
   }
 
   return (
@@ -35,11 +28,11 @@ export default function LoginForm({ onSubmit }: Props): JSX.Element {
       <form onSubmit={handleSubmit} style={style}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <label htmlFor="username">username</label>
-          <input id="username" name="Username" value={username} onChange={handleChange} />
+          <input id="username" name="Username" {...userName} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <label htmlFor="password">password</label>
-          <input id="password" name="Password" type="password" value={password} onChange={handleChange} />
+          <input id="password" name="Password" {...password} />
         </div>
         <button type="submit">login</button>
       </form>
