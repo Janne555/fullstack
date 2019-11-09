@@ -22,27 +22,34 @@ const asObject = (anecdote: string): Anecdote => {
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action: VoteAction | NewAnecdoteAction) => {
+  let newState: Anecdote[] | undefined = undefined
   switch (action.type) {
     case 'VOTE':
       {
         const index = state.findIndex(({ id }) => id === action.id)
         if (index === -1)
-          return state
+          break
         let copy = [...state]
         copy[index] = { ...state[index], votes: state[index].votes + 1 }
-        return copy
+        newState = copy
+        break
       }
     case 'NEW':
       {
         const { type, ...anecdote } = action
-        return state.concat(anecdote)
+        newState = state.concat(anecdote)
+        break
       }
   }
+
+  if (!newState)
+    newState = [...state]
 
   console.log('state now: ', state)
   console.log('action', action)
 
-  return state
+  newState.sort((a, b) => b.votes - a.votes)
+  return newState
 }
 
 export default reducer
