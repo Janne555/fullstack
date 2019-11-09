@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import { doVote } from '../reducers/anecdoteReducer'
-import { StateType } from '..'
+import { StateType } from '../store'
 import { Anecdote } from '../types'
 import { setNotification } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'

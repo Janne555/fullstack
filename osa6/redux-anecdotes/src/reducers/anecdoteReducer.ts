@@ -1,4 +1,4 @@
-import { VoteAction, Anecdote, NewAnecdoteAction } from '../types'
+import { VoteAction, Anecdote, NewAnecdoteAction, InitAction } from '../types'
 import Axios from 'axios'
 
 export const getId = () => (100000 * Math.random()).toFixed(0)
@@ -11,7 +11,7 @@ export const doCreate = (content: string): NewAnecdoteAction => {
 export const doVote = (id: string): VoteAction => ({ id, type: "VOTE" })
 
 
-const reducer = (state: Anecdote[] = [], action: VoteAction | NewAnecdoteAction) => {
+const reducer = (state: Anecdote[] = [], action: VoteAction | NewAnecdoteAction | InitAction) => {
   let newState: Anecdote[] | undefined = undefined
   switch (action.type) {
     case 'VOTE':
@@ -28,6 +28,11 @@ const reducer = (state: Anecdote[] = [], action: VoteAction | NewAnecdoteAction)
       {
         const { type, ...anecdote } = action
         newState = state.concat(anecdote)
+        break
+      }
+    case 'INIT':
+      {
+        newState = action.anecdotes
         break
       }
   }

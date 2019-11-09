@@ -3,6 +3,11 @@ export type VoteAction = {
   id: string
 }
 
+export type InitAction = {
+  type: "INIT"
+  anecdotes: Anecdote[]
+}
+
 export type NewAnecdoteAction = {
   type: "NEW"
   id: string

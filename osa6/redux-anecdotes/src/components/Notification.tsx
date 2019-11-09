@@ -1,5 +1,5 @@
 import React from 'react'
-import { StateType } from '..'
+import { StateType } from '../store'
 import { connect } from 'react-redux'
 
 const mapStateToProps = (state: StateType) => {
