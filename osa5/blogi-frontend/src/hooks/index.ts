@@ -4,6 +4,7 @@ type UseFieldProperties = {
   type: string;
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  reset: () => void;
 }
 
 export function useField(type: string): UseFieldProperties {
@@ -16,6 +17,7 @@ export function useField(type: string): UseFieldProperties {
   return {
     type,
     value,
-    onChange
+    onChange,
+    reset: (): void => setValue('')
   }
 }

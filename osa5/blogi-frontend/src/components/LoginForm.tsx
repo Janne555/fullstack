@@ -14,12 +14,14 @@ const style: React.CSSProperties = {
 }
 
 export default function LoginForm({ onSubmit }: Props): JSX.Element {
-  const userName = useField('text')
-  const password = useField('password')
+  const { reset: resetUsername, ...userName } = useField('text')
+  const { reset: resetPassword, ...password } = useField('password')
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault()
     onSubmit({ username: userName.value, password: password.value })
+    resetUsername()
+    resetPassword()
   }
 
   return (
