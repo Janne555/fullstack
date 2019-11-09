@@ -1,18 +1,18 @@
 import React from 'react';
 import { StoreType } from '.';
-import { getId } from './reducers/anecdoteReducer';
+import { doVote, doCreate } from './reducers/anecdoteReducer';
 
 const App = (props: { store: StoreType }) => {
   const anecdotes = props.store.getState()
 
   const vote = (id: string) => {
-    props.store.dispatch({ id, type: "VOTE" })
+    props.store.dispatch(doVote(id))
   }
 
   const create = (e: any) => {
     e.preventDefault()
     Object.defineProperty(e.target, "note", String)
-    props.store.dispatch({ type: "NEW", id: getId(), content: e.target.anecdote.value, votes: 0 })
+    props.store.dispatch(doCreate(e.target.anecdote.value))
     e.target.anecdote.value = ''
   }
 

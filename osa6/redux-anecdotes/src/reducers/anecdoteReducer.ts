@@ -21,6 +21,10 @@ const asObject = (anecdote: string): Anecdote => {
 
 const initialState = anecdotesAtStart.map(asObject)
 
+export const doCreate = (content: string): NewAnecdoteAction => ({ type: "NEW", id: getId(), content, votes: 0 })
+export const doVote = (id: string): VoteAction => ({ id, type: "VOTE" })
+
+
 const reducer = (state = initialState, action: VoteAction | NewAnecdoteAction) => {
   let newState: Anecdote[] | undefined = undefined
   switch (action.type) {
