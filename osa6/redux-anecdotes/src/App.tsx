@@ -1,19 +1,13 @@
 import React from 'react';
 import { StoreType } from '.';
-import { doVote, doCreate } from './reducers/anecdoteReducer';
+import { doVote } from './reducers/anecdoteReducer'
+import AnecdoteForm from './components/AnecdoteForm'
 
 const App = (props: { store: StoreType }) => {
   const anecdotes = props.store.getState()
 
   const vote = (id: string) => {
     props.store.dispatch(doVote(id))
-  }
-
-  const create = (e: any) => {
-    e.preventDefault()
-    Object.defineProperty(e.target, "note", String)
-    props.store.dispatch(doCreate(e.target.anecdote.value))
-    e.target.anecdote.value = ''
   }
 
   return (
@@ -30,11 +24,7 @@ const App = (props: { store: StoreType }) => {
           </div>
         </div>
       )}
-      <h2>create new</h2>
-      <form onSubmit={create} >
-        <div><input name="anecdote" /></div>
-        <button>create</button>
-      </form>
+      <AnecdoteForm store={props.store} />
     </div>
   )
 }
