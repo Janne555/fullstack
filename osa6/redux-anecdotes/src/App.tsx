@@ -10,7 +10,7 @@ const App = (props: { store: StoreType }) => {
   return (
     <div>
       <h2>Anecdotes</h2>
-      {props.store.getState().notification && <Notification store={props.store} />}
+      <Notification />
       <Filter />
       <AnecdoteList />
       <AnecdoteForm />
