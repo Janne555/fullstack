@@ -11,9 +11,9 @@ const App = (props: { store: StoreType }) => {
     <div>
       <h2>Anecdotes</h2>
       {props.store.getState().notification && <Notification store={props.store} />}
-      <Filter store={props.store} />
+      <Filter />
       <AnecdoteList store={props.store} />
-      <AnecdoteForm store={props.store} />
+      <AnecdoteForm />
     </div>
   )
 }

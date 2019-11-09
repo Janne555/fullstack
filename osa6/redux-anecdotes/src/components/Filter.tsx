@@ -1,20 +1,24 @@
 import React from 'react'
-import { StoreType } from '../index'
 import { setFilter } from '../reducers/filterReducer'
+import { connect } from 'react-redux'
+import { Dispatch } from 'redux'
 
-const Filter = ({ store }: { store: StoreType }) => {
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    store.dispatch(setFilter(event.target.value))
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    onChange: (e: React.ChangeEvent<HTMLInputElement>): void => { dispatch(setFilter(e.target.value)) }
   }
+}
+
+const Filter = ({ onChange }: ReturnType<typeof mapDispatchToProps>) => {
   const style = {
     marginBottom: 10
   }
 
   return (
     <div style={style}>
-      filter <input onChange={handleChange} />
+      filter <input onChange={onChange} />
     </div>
   )
 }
 
-export default Filter
+export default connect(null, mapDispatchToProps)(Filter)
