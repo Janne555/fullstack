@@ -5,7 +5,9 @@
   "dependencies": {
     "@types/deep-freeze": "^0.1.2",
     "@types/react-redux": "^7.1.5",
+    "axios": "^0.19.0",
     "deep-freeze": "0.0.1",
+    "json-server": "^0.15.1",
     "prop-types": "^15.7.2",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
@@ -18,7 +20,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "json-server -p3001 db.json"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -33,11 +36,12 @@
     "@testing-library/jest-dom": "^4.2.3",
     "@testing-library/react": "^9.3.2",
     "@types/axios": "^0.14.0",
-    "@typescript-eslint/eslint-plugin": "^2.6.1",
-    "@typescript-eslint/parser": "^2.6.1",
     "@types/jest": "24.0.21",
     "@types/node": "12.12.5",
     "@types/react": "16.9.11",
-    "@types/react-dom": "16.9.3"
-  }
+    "@types/react-dom": "16.9.3",
+    "@typescript-eslint/eslint-plugin": "^2.6.1",
+    "@typescript-eslint/parser": "^2.6.1"
+  },
+  "proxy": "http://localhost:3001"
 }
