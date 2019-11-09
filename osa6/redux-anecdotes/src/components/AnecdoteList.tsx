@@ -8,8 +8,7 @@ import { Dispatch } from 'redux'
 
 const mapStateToProps = (state: StateType) => {
   return {
-    anecdotes: state.anecdotes,
-    filter: state.filter
+    anecdotesToShow: state.anecdotes.filter(({ content }) => content.toLowerCase().includes(state.filter.toLowerCase()))
   }
 }
 
@@ -27,12 +26,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 
 type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>
 
-function AnecdoteList({ anecdotes, filter, vote }: Props): ReactElement {
-  const filteredAnecdotes = anecdotes.filter(({ content }) => content.toLowerCase().includes(filter.toLowerCase()))
-
+function AnecdoteList({ anecdotesToShow, vote }: Props): ReactElement {
   return (
     <>
-      {filteredAnecdotes.map(anecdote =>
+      {anecdotesToShow.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
