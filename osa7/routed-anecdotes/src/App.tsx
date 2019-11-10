@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import * as Types from './types'
-import { BrowserRouter as Router, Route, Link, Redirect, withRouter } from 'react-router-dom'
+import { Route, Link, Redirect, useHistory } from 'react-router-dom'
 import Anecdote from './components/Anecdote'
+import CreateNew from './components/CreateNew'
 
 const Menu = () => {
   const padding = {
@@ -51,49 +52,6 @@ const Footer = () => (
   </div>
 )
 
-type CreateNewProps = {
-  addNew: (anecdote: Types.ProtoAnecdote) => void
-}
-
-const CreateNew = (props: CreateNewProps) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
-
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    props.addNew({
-      content,
-      author,
-      info,
-      votes: 0
-    })
-  }
-
-  return (
-    <div>
-      <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
-        </div>
-        <div>
-          author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
-        </div>
-        <div>
-          url for more info
-          <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
-        </div>
-        <button>create</button>
-      </form>
-    </div>
-  )
-
-}
-
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -111,12 +69,17 @@ const App = () => {
       id: '2'
     }
   ])
-
   const [notification, setNotification] = useState('')
+  const history = useHistory()
 
   const addNew = (anecdote: Types.ProtoAnecdote) => {
     const id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat({ ...anecdote, id }))
+    history.push("/")
+    setNotification(`a new anecdote ${anecdote.content} created!`)
+    setTimeout(() => {
+      setNotification('')
+    }, 10000);
   }
 
   const anecdoteById = (id: string) => {
@@ -125,6 +88,7 @@ const App = () => {
       throw Error("bad id")
     return anecdote
   }
+
   const vote = (id: string) => {
     const anecdote = anecdoteById(id)
     if (!anecdote)
@@ -140,21 +104,20 @@ const App = () => {
 
   return (
     <div>
-      <Router>
-        <h1>Software anecdotes</h1>
-        <Menu />
-        <Route exact path="/">
-          <AnecdoteList anecdotes={anecdotes} />
-        </Route>
-        <Route exact path="/about">
-          <About />
-        </Route>
-        <Route exact path="/createnew">
-          <CreateNew addNew={addNew} />
-        </Route>
-        <Route exact path="/anecdotes/:id" render={({ match }) => <Anecdote anecdote={anecdoteById(match.params.id)} />} />
-        < Footer />
-      </Router>
+      <h1>Software anecdotes</h1>
+      <Menu />
+      {notification}
+      <Route exact path="/">
+        <AnecdoteList anecdotes={anecdotes} />
+      </Route>
+      <Route exact path="/about">
+        <About />
+      </Route>
+      <Route exact path="/createnew">
+        <CreateNew addNew={addNew} />
+      </Route>
+      <Route exact path="/anecdotes/:id" render={({ match }) => <Anecdote anecdote={anecdoteById(match.params.id)} />} />
+      < Footer />
     </div>
   )
 }
