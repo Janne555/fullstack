@@ -1,6 +1,6 @@
-import { useSelector, useDispatch } from "react-redux"
-import { AppState } from "../store"
-import { ThunkDispatch } from "redux-thunk"
+import { useSelector, useDispatch } from 'react-redux'
+import { AppState } from '../store'
+import { ThunkDispatch } from 'redux-thunk'
 import { Action } from '../types'
 
 export function useAppSelector<TSelected>(selector: (state: AppState) => TSelected): TSelected {

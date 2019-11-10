@@ -1,4 +1,6 @@
 import { Dispatch } from 'redux'
+import { ThunkDispatch } from 'redux-thunk'
+import { AppState } from './store'
 
 export type User = {
   token: string;
@@ -26,13 +28,20 @@ export type Blog = {
   };
 }
 
-
 export type AppDispatch = Dispatch<Action.AppAction>
+export type AppThunkDispatch<T> = ThunkDispatch<AppState, undefined, T>
+
+export type AppAsyncAction<TAction> = (dispatch: AppThunkDispatch<TAction>, getState: () => AppState) => Promise<void>
 
 export namespace State {
   type Notification = {
     message: string;
     error: boolean;
+  }
+
+  type User = {
+    username?: string;
+    token?: string;
   }
 }
 
@@ -43,7 +52,26 @@ export namespace Action {
     error: boolean;
   }
 
-  type AppAction = SetNotification
+  type InitBlogs = {
+    type: 'INIT_BLOGS';
+    blogs: Blog[];
+  }
+
+  type SetUser = {
+    type: 'SET_USER';
+    username: string;
+    token: string;
+  }
+
+  type Logout = {
+    type: 'LOGOUT';
+  }
+
+  type BlogAction = InitBlogs
+
+  type UserAction = SetUser | Logout
+
+  type AppAction = SetNotification | BlogAction | UserAction
 }
 
 export type NewBlog = Omit<Blog, 'likes' | 'id' | 'user'>

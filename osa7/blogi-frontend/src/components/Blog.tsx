@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react'
-import { Blog as BlogType } from '../types'
-import { UserContext } from '../App'
+import React, { useState } from 'react'
+import { Blog as BlogType, State } from '../types'
 import PropTypes from 'prop-types'
+import { useAppSelector } from '../hooks/reduxHooks'
 
 type Props = {
   blog: BlogType;
@@ -19,7 +19,7 @@ const blogStyle = {
 
 export default function Blog({ blog, onLike, onRemove }: Props): JSX.Element {
   const [visible, setVisible] = useState(false)
-  const currentUser = useContext(UserContext)
+  const { username: currentUser } = useAppSelector<State.User>(state => state.user)
 
   return (
     <div style={blogStyle}>

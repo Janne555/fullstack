@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 type UseResourceProperties<T, N> = [
   T[],
@@ -16,49 +16,46 @@ function getBearer(): string | undefined {
 }
 
 export function useResource<T extends { id: string }, N>(url: string): UseResourceProperties<T, N> {
-  let cancelled = false
-
-  const [resource, setResource] = useState<T[]>([])
-
   const Authorization = getBearer()
 
-  async function getResource(): Promise<T[] | void> {
+  const cancelled = useRef(false)
+  const [resource, setResource] = useState<T[]>([])
+  const getResource = useCallback(async function getResource(): Promise<T[] | void> {
     if (Authorization) {
       const { data } = await axios.get<T[]>(url, { headers: { Authorization } })
       return data
     }
-  }
+  }, [Authorization, url])
 
   async function create(res: N): Promise<void> {
     await axios.post(url, res, { headers: { Authorization } })
     const newRes = await getResource()
-    if (!cancelled && newRes)
+    if (!cancelled.current && newRes)
       setResource(newRes)
   }
 
   async function update(res: T): Promise<void> {
     await axios.put(`${url}/${res.id}`, res, { headers: { Authorization } })
     const newRes = await getResource()
-    if (!cancelled && newRes)
+    if (!cancelled.current && newRes)
       setResource(newRes)
   }
 
   async function remove(res: T): Promise<void> {
     await axios.delete(`${url}/${res.id}`, { headers: { Authorization } })
     const newRes = await getResource()
-    if (!cancelled && newRes)
+    if (!cancelled.current && newRes)
       setResource(newRes)
   }
-
 
   useEffect(() => {
     getResource()
       .then(res => {
-        if (!cancelled && res)
+        if (!cancelled.current && res)
           setResource(res)
       })
-    return (): void => { cancelled = true }
-  }, [Authorization])
+    return (): void => { cancelled.current = true }
+  }, [Authorization, getResource])
 
 
   return [

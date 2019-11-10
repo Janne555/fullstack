@@ -1,11 +1,9 @@
-import { Action, State, AppDispatch } from '../types'
-import { AppState } from '../store'
-import { ThunkDispatch } from 'redux-thunk'
+import { Action, State, AppAsyncAction } from '../types'
 
 export const clearNotification = (): Action.SetNotification => ({ type: 'SET_NOTIFICATION', message: '', error: false })
 
-export const setNotification = (message: string, error?: boolean): (dispatch: ThunkDispatch<AppState, undefined, Action.SetNotification>) => Promise<void> => {
-  return async (dispatch: AppDispatch): Promise<void> => {
+export const setNotification = (message: string, error?: boolean): AppAsyncAction<Action.SetNotification> => {
+  return async (dispatch): Promise<void> => {
     dispatch(({ type: 'SET_NOTIFICATION', message, error: error ? true : false }))
     setTimeout(() => {
       dispatch(clearNotification())
