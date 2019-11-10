@@ -1,4 +1,4 @@
-import { Blog } from '../../../types'
+import { Blog } from '../../types'
 
 function getBlogs(): Promise<Blog[]> {
   return Promise.resolve([{

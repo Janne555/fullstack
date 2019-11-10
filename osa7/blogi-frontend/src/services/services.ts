@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Credentials, User, Blog, NewBlog } from '../../types'
+import { Credentials, User, Blog, NewBlog } from '../types'
 
 const BLOGS_URL = '/api/blog'
 const LOGIN_URL = '/api/login'

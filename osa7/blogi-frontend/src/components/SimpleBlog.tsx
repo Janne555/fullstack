@@ -1,5 +1,5 @@
 import React from 'react'
-import { Blog } from '../../types'
+import { Blog } from '../types'
 
 type Props = {
   blog: Blog;

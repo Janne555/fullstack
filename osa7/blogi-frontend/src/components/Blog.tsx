@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { Blog as BlogType } from '../../types'
+import { Blog as BlogType } from '../types'
 import { UserContext } from '../App'
 import PropTypes from 'prop-types'
 

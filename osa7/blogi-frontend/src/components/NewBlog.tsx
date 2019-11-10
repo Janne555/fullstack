@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { NewBlog as NewBlogType } from '../../types'
+import { NewBlog as NewBlogType } from '../types'
 
 type Props = {
   onSubmit: (blog: NewBlogType) => void;

@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
-import { Blog as BlogType } from '../../types'
+import { Blog as BlogType } from '../types'
 import '@testing-library/jest-dom/extend-expect'
 
 describe('<Blog />', () => {

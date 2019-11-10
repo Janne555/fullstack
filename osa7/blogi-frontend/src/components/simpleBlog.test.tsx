@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import SimpleBlog from './SimpleBlog'
-import { Blog } from '../../types'
+import { Blog } from '../types'
 
 describe('<SimpleBlog />', () => {
   const blog: Blog = {

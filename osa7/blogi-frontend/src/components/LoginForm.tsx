@@ -1,5 +1,5 @@
 import React from 'react'
-import { Credentials } from '../../types'
+import { Credentials } from '../types'
 import PropTypes from 'prop-types'
 import { useField } from '../hooks'
 

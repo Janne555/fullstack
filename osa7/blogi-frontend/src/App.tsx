@@ -1,36 +1,36 @@
 import React, { useState } from 'react'
 import Message from './components/Message'
-import * as Types from '../types'
+import * as Types from './types'
 import LoginForm from './components/LoginForm'
 import { login } from './services/services'
 import NewBlog from './components/NewBlog'
 import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import { useResource } from './hooks/useResource'
+import { setNotification } from './reducers/notification'
+import { useAppDispatch, useAppSelector } from './hooks/reduxHooks'
 
 export const UserContext = React.createContext<string>('')
 
 const App: React.FC = () => {
   const [user, setUser] = useState<Types.User | null>(null)
-  const [message, setMessage] = useState<Types.Message | null>(null)
   const [blogs, blogService] = useResource<Types.Blog, Types.NewBlog>('/api/blog')
+  const dispatch = useAppDispatch()
+  const { message } = useAppSelector<Types.State.Notification>(state => state.notification)
 
   async function handleLogin(credentials: Types.Credentials): Promise<void> {
     try {
       const user = await login(credentials)
       setUser(user)
 
-      setMessage({ content: `Logged in as ${user.username}` })
-      setTimeout(() => setMessage(null), 5000)
+      dispatch(setNotification(`Logged in as ${user.username}`))
       window.localStorage.setItem('token', user.token)
       window.localStorage.setItem('userName', user.username)
     } catch (error) {
       if (error.message.includes('401')) {
-        setMessage({ content: 'wrong username or password', error: true })
-        setTimeout(() => setMessage(null), 5000)
+        dispatch(setNotification('wrong username or password', true))
       } else {
-        setMessage({ content: error.message, error: true })
-        setTimeout(() => setMessage(null), 5000)
+        dispatch(setNotification(error.message, true))
       }
       console.error(error)
     }
@@ -41,12 +41,10 @@ const App: React.FC = () => {
       return
     try {
       await blogService.create(newblog)
-      setMessage({ content: `a new blog ${newblog.title} by ${newblog.author} added` })
-      setTimeout(() => setMessage(null), 5000)
+      dispatch(setNotification(`a new blog ${newblog.title} by ${newblog.author} added`))
     } catch (error) {
       console.error()
-      setMessage({ content: error.message, error: true })
-      setTimeout(() => setMessage(null), 5000)
+      dispatch(setNotification(error.message, true))
     }
   }
 
@@ -63,12 +61,10 @@ const App: React.FC = () => {
 
     try {
       await blogService.update(blog)
-      setMessage({ content: `liked blog "${blog.title}"` })
-      setTimeout(() => setMessage(null), 5000)
+      dispatch(setNotification(`liked blog "${blog.title}"`))
     } catch (error) {
       console.error(error)
-      setMessage({ content: error.message, error: true })
-      setTimeout(() => setMessage(null), 5000)
+      dispatch(setNotification(error.message, true))
     }
   }
 
@@ -82,12 +78,10 @@ const App: React.FC = () => {
 
     try {
       await blogService.remove(blog)
-      setMessage({ content: `removed blog "${blog.title}"` })
-      setTimeout(() => setMessage(null), 5000)
+      dispatch(setNotification(`removed blog "${blog.title}"`))
     } catch (error) {
       console.error(error)
-      setMessage({ content: error.message, error: true })
-      setTimeout(() => setMessage(null), 5000)
+      dispatch(setNotification(error.message, true))
     }
   }
 
@@ -95,7 +89,7 @@ const App: React.FC = () => {
   return (
     <UserContext.Provider value={user ? user.username : ''} >
       <div>
-        {message && <Message message={message} />}
+        {message && <Message />}
         {!user
           ? <LoginForm onSubmit={handleLogin} />
           : <div>

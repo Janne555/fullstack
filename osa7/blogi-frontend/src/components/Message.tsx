@@ -1,14 +1,12 @@
 import React from 'react'
-import { Message as MessageType } from '../../types'
+import { State } from '../types'
+import { useAppSelector } from '../hooks/reduxHooks'
 
-type Props = {
-  message: MessageType;
-}
-
-export default function Message({ message: { content, error } }: Props): JSX.Element {
+export default function Message(): JSX.Element {
+  const { message, error } = useAppSelector<State.Notification>(state => state.notification)
   return (
     <div style={{ color: error ? 'red' : 'green', backgroundColor: 'grey', border: `solid 3px ${error ? 'red' : 'green'}`, padding: '1em' }}>
-      {content}
+      {message}
     </div>
   )
 }
