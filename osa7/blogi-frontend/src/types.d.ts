@@ -5,6 +5,8 @@ import { AppState } from './store'
 export type User = {
   token: string;
   username: string;
+  blogs: Blog[];
+  id: string;
 }
 
 export type Credentials = {
@@ -61,6 +63,11 @@ export namespace Action {
     type: 'SET_USER';
     username: string;
     token: string;
+  }
+
+  type SetUsers = {
+    type: 'SET_USERS';
+    users: User[];
   }
 
   type Logout = {

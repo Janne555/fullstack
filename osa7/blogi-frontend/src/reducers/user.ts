@@ -1,15 +1,9 @@
 import { Action, State, AppAsyncAction, Credentials } from '../types'
-import { initBlogs } from './blogs'
 import * as services from '../services/services'
 import { setNotification } from './notification'
 
 
-export const setUser = (username: string, token: string): AppAsyncAction<Action.SetUser> => {
-  return async (dispatch): Promise<void> => {
-    dispatch(({ type: 'SET_USER', username, token }))
-    dispatch(initBlogs())
-  }
-}
+export const setUser = (username: string, token: string): Action.SetUser => ({ type: 'SET_USER', username, token })
 
 export const login = (credentials: Credentials): AppAsyncAction<Action.SetUser> => {
   return async (dispatch): Promise<void> => {

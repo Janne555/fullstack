@@ -4,10 +4,13 @@ import * as Types from './types'
 import LoginForm from './components/LoginForm'
 import NewBlog from './components/NewBlog'
 import Blog from './components/Blog'
+import Users from './components/Users'
 import Togglable from './components/Togglable'
 import { useAppDispatch, useAppSelector } from './hooks/reduxHooks'
 import { initUser, login, logout } from './reducers/user'
-import { createBlog, likeBlog, removeBlog } from './reducers/blogs'
+import { createBlog, likeBlog, removeBlog, initBlogs } from './reducers/blogs'
+import { initUsers } from './reducers/users'
+import { Link, Route } from 'react-router-dom'
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -17,6 +20,8 @@ const App: React.FC = () => {
 
   useEffect(() => {
     dispatch(initUser())
+    dispatch(initBlogs())
+    dispatch(initUsers())
   }, [dispatch])
 
   function handleLogin(credentials: Types.Credentials): void {
@@ -42,15 +47,21 @@ const App: React.FC = () => {
     dispatch(removeBlog(blog))
   }
 
+  if (!username)
+    return (
+      <div>
+        {message && <Message />}
+        <LoginForm onSubmit={handleLogin} />
+      </div>
+    )
 
   return (
     <div>
       {message && <Message />}
-      {!username
-        ? <LoginForm onSubmit={handleLogin} />
-        : <div>
-          <h1>blogs</h1>
-          <h2>blogs for {username} <button onClick={handleLogout}>logout</button></h2>
+      <h1>blogs</h1>
+      <h2>blogs for {username} <button onClick={handleLogout}>logout</button></h2>
+      <Route exact path="/">
+        <div>
           <Togglable buttonLabel="new blog">
             <NewBlog onSubmit={handleNewBlog} />
           </Togglable>
@@ -58,7 +69,10 @@ const App: React.FC = () => {
             blogs.map(blog => <Blog key={blog.id} blog={blog} onLike={handleLike} onRemove={handleRemove} />)
           }
         </div>
-      }
+      </Route>
+      <Route exact path="/users">
+        <Users />
+      </Route>
     </div>
   )
 }
