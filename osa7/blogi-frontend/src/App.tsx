@@ -6,6 +6,7 @@ import NewBlog from './components/NewBlog'
 import Blog from './components/Blog'
 import Users from './components/Users'
 import Togglable from './components/Togglable'
+import UserView from './components/UserView'
 import { useAppDispatch, useAppSelector } from './hooks/reduxHooks'
 import { initUser, login, logout } from './reducers/user'
 import { createBlog, likeBlog, removeBlog, initBlogs } from './reducers/blogs'
@@ -16,6 +17,7 @@ const App: React.FC = () => {
   const dispatch = useAppDispatch()
   const { message } = useAppSelector<Types.State.Notification>(state => state.notification)
   const { username } = useAppSelector<Types.State.User>(state => state.user)
+  const users = useAppSelector<Types.User[]>(state => state.users)
   const blogs = useAppSelector<Types.Blog[]>(state => state.blogs)
 
   useEffect(() => {
@@ -47,6 +49,10 @@ const App: React.FC = () => {
     dispatch(removeBlog(blog))
   }
 
+  function getUserById(id: string): Types.User | undefined {
+    return users.find(user => user.id === id)
+  }
+
   if (!username)
     return (
       <div>
@@ -73,6 +79,7 @@ const App: React.FC = () => {
       <Route exact path="/users">
         <Users />
       </Route>
+      <Route exact path="/users/:id" render={({ match }): JSX.Element => <UserView user={getUserById(match.params.id)} />} />
     </div>
   )
 }

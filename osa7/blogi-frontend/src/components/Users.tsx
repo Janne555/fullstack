@@ -1,6 +1,7 @@
 import React from 'react'
 import { useAppSelector } from '../hooks/reduxHooks'
 import { User } from '../types'
+import { Link } from 'react-router-dom'
 
 export default function Users(): JSX.Element {
   const users = useAppSelector<User[]>(state => state.users)
@@ -15,7 +16,7 @@ export default function Users(): JSX.Element {
       <tbody>
         {users.map(user => (
           <tr key={user.id}>
-            <td>{user.username}</td>
+            <td><Link to={`/users/${user.id}`}>{user.username}</Link></td>
             <td>{user.blogs.length}</td>
           </tr>
         ))}
