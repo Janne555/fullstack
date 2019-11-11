@@ -7,9 +7,15 @@ import { List } from 'semantic-ui-react'
 export default function Blogs(): JSX.Element {
   const blogs = useAppSelector<Types.Blog[]>(state => state.blogs)
   return (
-    <List as='ul'>
+    <List>
       {
-        blogs.map(blog => <List.Item key={blog.id} as='li'><Link to={`/blogs/${blog.id}`}>{blog.title}</Link></List.Item>)
+        blogs.map(blog => (
+          <List.Item key={blog.id}>
+            <List.Icon name="blogger" />
+            <List.Content>
+              <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+            </List.Content>
+          </List.Item>))
       }
     </List>
   )
