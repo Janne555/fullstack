@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks'
 import { logout } from '../reducers/user'
+import { Menu } from 'semantic-ui-react'
 
 export default function NavBar(): JSX.Element {
   const user = useAppSelector(state => state.user)
@@ -12,19 +13,19 @@ export default function NavBar(): JSX.Element {
   }
 
   return (
-    <div className="navbar">
-      <div>
+    <Menu>
+      <Menu.Item>
         <Link to="/blogs">blogs</Link>
-      </div>
-      <div>
+      </Menu.Item>
+      <Menu.Item>
         <Link to="/users" >users</Link>
-      </div>
-      <div>
+      </Menu.Item>
+      <Menu.Item>
         {user && `${user.username} logged in`}
-      </div>
-      <div>
+      </Menu.Item>
+      <Menu.Item>
         <button onClick={handleLogout}>logout</button>
-      </div>
-    </div>
+      </Menu.Item>
+    </Menu>
   )
 }
