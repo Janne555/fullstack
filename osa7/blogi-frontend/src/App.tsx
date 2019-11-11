@@ -8,11 +8,13 @@ import Togglable from './components/Togglable'
 import UserView from './components/UserView'
 import { useAppDispatch, useAppSelector } from './hooks/reduxHooks'
 import { initUser, login, logout } from './reducers/user'
-import blogs, { createBlog, initBlogs } from './reducers/blogs'
+import { createBlog, initBlogs } from './reducers/blogs'
 import { initUsers } from './reducers/users'
 import { Route } from 'react-router-dom'
 import Blogs from './components/Blogs'
 import Blog from './components/Blog'
+import NavBar from './components/NavBar'
+import './app.css'
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -58,10 +60,11 @@ const App: React.FC = () => {
 
   return (
     <div>
+      <NavBar />
       {message && <Message />}
       <h1>blogs</h1>
       <h2>blogs for {username} <button onClick={handleLogout}>logout</button></h2>
-      <Route exact path="/">
+      <Route exact path={['/blogs', '/']}>
         <div>
           <Togglable buttonLabel="new blog">
             <NewBlog onSubmit={handleNewBlog} />
