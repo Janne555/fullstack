@@ -2,6 +2,7 @@ import React from 'react'
 import { Credentials } from '../types'
 import PropTypes from 'prop-types'
 import { useField } from '../hooks'
+import { Form, Segment } from 'semantic-ui-react'
 
 type Props = {
   onSubmit: (credentials: Credentials) => void;
@@ -25,20 +26,20 @@ export default function LoginForm({ onSubmit }: Props): JSX.Element {
   }
 
   return (
-    <div>
+    <Segment>
       <h1>log in to application</h1>
-      <form onSubmit={handleSubmit} style={style}>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <label htmlFor="username">username</label>
+      <Form onSubmit={handleSubmit} style={style}>
+        <Form.Field>
+          <label>username</label>
           <input id="username" name="Username" {...userName} />
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <label htmlFor="password">password</label>
+        </Form.Field>
+        <Form.Field>
+          <label>password</label>
           <input id="password" name="Password" {...password} />
-        </div>
+        </Form.Field>
         <button type="submit">login</button>
-      </form>
-    </div>
+      </Form>
+    </Segment>
   )
 }
 
