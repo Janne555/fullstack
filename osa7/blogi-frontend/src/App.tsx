@@ -62,8 +62,8 @@ const App: React.FC = () => {
   return (
     <div>
       <NavBar />
-      {message && <Message />}
       <Segment>
+        {message && <Message />}
         <h1>blogs</h1>
         <h2>blogs for {username}</h2>
         <Route exact path={['/blogs', '/']}>
