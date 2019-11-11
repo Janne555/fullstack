@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Blog as BlogType, State } from '../types'
 import PropTypes from 'prop-types'
 import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks'
