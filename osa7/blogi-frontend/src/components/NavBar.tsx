@@ -23,8 +23,10 @@ export default function NavBar(): JSX.Element {
       <Menu.Item>
         {user && `${user.username} logged in`}
       </Menu.Item>
-      <Menu.Item>
-        <button onClick={handleLogout}>logout</button>
+      <Menu.Item
+        onClick={handleLogout}
+      >
+        logout
       </Menu.Item>
     </Menu>
   )

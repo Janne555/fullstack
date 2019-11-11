@@ -63,7 +63,7 @@ const App: React.FC = () => {
       <NavBar />
       {message && <Message />}
       <h1>blogs</h1>
-      <h2>blogs for {username} <button onClick={handleLogout}>logout</button></h2>
+      <h2>blogs for {username}</h2>
       <Route exact path={['/blogs', '/']}>
         <div>
           <Togglable buttonLabel="new blog">
