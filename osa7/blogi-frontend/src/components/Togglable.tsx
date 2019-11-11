@@ -1,4 +1,5 @@
 import React, { useState, CSSProperties, ReactNode } from 'react'
+import { Button } from 'semantic-ui-react'
 
 type Props = {
   children: ReactNode;
@@ -18,11 +19,11 @@ export default function Togglable({ children, buttonLabel }: Props): JSX.Element
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{buttonLabel}</button>
+        <Button onClick={toggleVisibility}>{buttonLabel}</Button>
       </div>
       <div style={showWhenVisible}>
         {children}
-        <button onClick={toggleVisibility}>cancel</button>
+        <Button onClick={toggleVisibility}>cancel</Button>
       </div>
     </div>
   )
