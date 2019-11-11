@@ -15,6 +15,7 @@ import Blogs from './components/Blogs'
 import Blog from './components/Blog'
 import NavBar from './components/NavBar'
 import './app.css'
+import { Segment } from 'semantic-ui-react'
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -62,21 +63,23 @@ const App: React.FC = () => {
     <div>
       <NavBar />
       {message && <Message />}
-      <h1>blogs</h1>
-      <h2>blogs for {username}</h2>
-      <Route exact path={['/blogs', '/']}>
-        <div>
-          <Togglable buttonLabel="new blog">
-            <NewBlog onSubmit={handleNewBlog} />
-          </Togglable>
-          <Blogs />
-        </div>
-      </Route>
-      <Route exact path="/users">
-        <Users />
-      </Route>
-      <Route exact path="/users/:id" render={({ match }): JSX.Element => <UserView user={getUserById(match.params.id)} />} />
-      <Route exact path="/blogs/:id" render={({ match }): JSX.Element => <Blog blog={getBlogById(match.params.id)} />} />
+      <Segment>
+        <h1>blogs</h1>
+        <h2>blogs for {username}</h2>
+        <Route exact path={['/blogs', '/']}>
+          <div>
+            <Togglable buttonLabel="new blog">
+              <NewBlog onSubmit={handleNewBlog} />
+            </Togglable>
+            <Blogs />
+          </div>
+        </Route>
+        <Route exact path="/users">
+          <Users />
+        </Route>
+        <Route exact path="/users/:id" render={({ match }): JSX.Element => <UserView user={getUserById(match.params.id)} />} />
+        <Route exact path="/blogs/:id" render={({ match }): JSX.Element => <Blog blog={getBlogById(match.params.id)} />} />
+      </Segment>
     </div>
   )
 }
