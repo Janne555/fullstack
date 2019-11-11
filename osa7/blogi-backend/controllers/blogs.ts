@@ -76,4 +76,20 @@ blogRouter.put('/:id', async (request, response, next) => {
   }
 })
 
+blogRouter.post('/:id/comments', async (request, response, next) => {
+  if (!request.body.value)
+    return response.status(400).json({ error: 'empty body' })
+
+  try {
+    const blog = await Blog.findById(request.params.id)
+    if (!blog)
+      return response.status(404).json({ error: 'no blog by id' })
+    blog.comments.push(request.body.value)
+    await blog.save()
+    return response.status(200).json(blog.toJSON())
+  } catch (error) {
+    next(error)
+  }
+})
+
 export default blogRouter

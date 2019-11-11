@@ -9,7 +9,8 @@ const blogSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User'
-  }
+  },
+  comments: [String]
 })
 
 blogSchema.set('toJSON', {
@@ -17,6 +18,8 @@ blogSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
+    if (!('comments' in returnedObject))
+      returnedObject.commments = []
   }
 })
 
