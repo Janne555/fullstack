@@ -3,15 +3,16 @@ import Message from './components/Message'
 import * as Types from './types'
 import LoginForm from './components/LoginForm'
 import NewBlog from './components/NewBlog'
-import Blog from './components/Blog'
 import Users from './components/Users'
 import Togglable from './components/Togglable'
 import UserView from './components/UserView'
 import { useAppDispatch, useAppSelector } from './hooks/reduxHooks'
 import { initUser, login, logout } from './reducers/user'
-import { createBlog, likeBlog, removeBlog, initBlogs } from './reducers/blogs'
+import blogs, { createBlog, initBlogs } from './reducers/blogs'
 import { initUsers } from './reducers/users'
-import { Link, Route } from 'react-router-dom'
+import { Route } from 'react-router-dom'
+import Blogs from './components/Blogs'
+import Blog from './components/Blog'
 
 const App: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -38,19 +39,13 @@ const App: React.FC = () => {
     dispatch(logout())
   }
 
-  async function handleLike(blog: Types.Blog): Promise<void> {
-    dispatch(likeBlog(blog))
-  }
-
-  async function handleRemove(blog: Types.Blog): Promise<void> {
-    const ok = window.confirm(`remove blog ${blog.title} by ${blog.author}`)
-    if (!ok)
-      return
-    dispatch(removeBlog(blog))
-  }
 
   function getUserById(id: string): Types.User | undefined {
     return users.find(user => user.id === id)
+  }
+
+  function getBlogById(id: string): Types.Blog | undefined {
+    return blogs.find(blog => blog.id === id)
   }
 
   if (!username)
@@ -71,15 +66,14 @@ const App: React.FC = () => {
           <Togglable buttonLabel="new blog">
             <NewBlog onSubmit={handleNewBlog} />
           </Togglable>
-          {
-            blogs.map(blog => <Blog key={blog.id} blog={blog} onLike={handleLike} onRemove={handleRemove} />)
-          }
+          <Blogs />
         </div>
       </Route>
       <Route exact path="/users">
         <Users />
       </Route>
       <Route exact path="/users/:id" render={({ match }): JSX.Element => <UserView user={getUserById(match.params.id)} />} />
+      <Route exact path="/blogs/:id" render={({ match }): JSX.Element => <Blog blog={getBlogById(match.params.id)} />} />
     </div>
   )
 }

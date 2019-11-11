@@ -1,37 +1,42 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Blog as BlogType, State } from '../types'
 import PropTypes from 'prop-types'
-import { useAppSelector } from '../hooks/reduxHooks'
+import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks'
+import { likeBlog, removeBlog } from '../reducers/blogs'
+import * as Types from '../types'
+import { useHistory } from 'react-router'
 
 type Props = {
-  blog: BlogType;
-  onLike: (blog: BlogType) => void;
-  onRemove: (blog: BlogType) => void;
+  blog: BlogType | undefined;
 }
 
-const blogStyle = {
-  paddingTop: 10,
-  paddingLeft: 2,
-  border: 'solid',
-  borderWidth: 1,
-  marginBottom: 5
-}
-
-export default function Blog({ blog, onLike, onRemove }: Props): JSX.Element {
-  const [visible, setVisible] = useState(false)
+export default function Blog({ blog }: Props): JSX.Element | null {
   const { username: currentUser } = useAppSelector<State.User>(state => state.user)
+  const dispatch = useAppDispatch()
+  const history = useHistory()
+
+  function handleLike(blog: Types.Blog): void {
+    dispatch(likeBlog(blog))
+  }
+
+  function handleRemove(blog: Types.Blog): void {
+    const ok = window.confirm(`remove blog ${blog.title} by ${blog.author}`)
+    if (!ok)
+      return
+    dispatch(removeBlog(blog))
+    history.push('/')
+  }
+
+  if (!blog)
+    return null
 
   return (
-    <div style={blogStyle}>
-      <div onClick={(): void => setVisible(prev => !prev)}>{blog.title} {blog.author}</div>
-      {visible &&
-        <div>
-          <div>{blog.url}</div>
-          <div>{blog.likes} likes <button onClick={(): void => onLike(blog)}>like</button></div>
-          <div>added by {blog.user.username}</div>
-          {currentUser === blog.user.username && <button onClick={(): void => onRemove(blog)}>remove</button>}
-        </div>
-      }
+    <div>
+      <h1>{blog.title}</h1>
+      <a href={blog.url}>{blog.url}</a>
+      <div>{blog.likes} likes <button onClick={(): void => handleLike(blog)}>like</button></div>
+      <div>added by {blog.user.username}</div>
+      {currentUser === blog.user.username && <button onClick={(): void => handleRemove(blog)}>remove</button>}
     </div>
   )
 }
