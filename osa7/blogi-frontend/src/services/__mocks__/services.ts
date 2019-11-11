@@ -9,7 +9,8 @@ function getBlogs(): Promise<Blog[]> {
     url: 'osoite',
     user: {
       username: 'käyttäjä'
-    }
+    },
+    comments: []
   }])
 }
 

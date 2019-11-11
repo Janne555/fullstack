@@ -28,6 +28,7 @@ export type Blog = {
   user: {
     username: string;
   };
+  comments: string[];
 }
 
 export type AppDispatch = Dispatch<Action.AppAction>
@@ -81,4 +82,4 @@ export namespace Action {
   type AppAction = SetNotification | BlogAction | UserAction
 }
 
-export type NewBlog = Omit<Blog, 'likes' | 'id' | 'user'>
+export type NewBlog = Omit<Blog, 'likes' | 'id' | 'user' | 'comments'>

@@ -37,6 +37,9 @@ export default function Blog({ blog }: Props): JSX.Element | null {
       <div>{blog.likes} likes <button onClick={(): void => handleLike(blog)}>like</button></div>
       <div>added by {blog.user.username}</div>
       {currentUser === blog.user.username && <button onClick={(): void => handleRemove(blog)}>remove</button>}
+      <ul>
+        {blog.comments.map((comment, i) => <li key={`${comment}${i}`}>{comment}</li>)}
+      </ul>
     </div>
   )
 }
