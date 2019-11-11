@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Blog as BlogType, State } from '../types'
 import PropTypes from 'prop-types'
 import { useAppSelector, useAppDispatch } from '../hooks/reduxHooks'
-import { likeBlog, removeBlog } from '../reducers/blogs'
+import { likeBlog, removeBlog, commentBlog } from '../reducers/blogs'
 import * as Types from '../types'
 import { useHistory } from 'react-router'
 
@@ -14,6 +14,7 @@ export default function Blog({ blog }: Props): JSX.Element | null {
   const { username: currentUser } = useAppSelector<State.User>(state => state.user)
   const dispatch = useAppDispatch()
   const history = useHistory()
+  const [comment, setComment] = useState('')
 
   function handleLike(blog: Types.Blog): void {
     dispatch(likeBlog(blog))
@@ -27,6 +28,13 @@ export default function Blog({ blog }: Props): JSX.Element | null {
     history.push('/')
   }
 
+  function handleClick(): void {
+    if (!blog)
+      return
+    dispatch(commentBlog(blog.id, comment))
+    setComment('')
+  }
+
   if (!blog)
     return null
 
@@ -37,6 +45,11 @@ export default function Blog({ blog }: Props): JSX.Element | null {
       <div>{blog.likes} likes <button onClick={(): void => handleLike(blog)}>like</button></div>
       <div>added by {blog.user.username}</div>
       {currentUser === blog.user.username && <button onClick={(): void => handleRemove(blog)}>remove</button>}
+      <h4>comments</h4>
+      <div>
+        <input value={comment} onChange={(e): void => setComment(e.target.value)} />
+        <button onClick={handleClick}>add comment</button>
+      </div>
       <ul>
         {blog.comments.map((comment, i) => <li key={`${comment}${i}`}>{comment}</li>)}
       </ul>

@@ -54,6 +54,18 @@ export const removeBlog = (blog: Blog): AppAsyncAction<Action.InitBlogs> => {
 }
 
 
+export const commentBlog = (blogId: string, comment: string): AppAsyncAction<Action.InitBlogs> => {
+  return async (dispatch): Promise<void> => {
+    try {
+      await Axios.post(`/api/blog/${blogId}/comments`, { value: comment })
+      dispatch(initBlogs())
+    } catch (error) {
+      console.error(error)
+      dispatch(setNotification('could not post comment', true))
+    }
+  }
+}
+
 
 function blogs(blogs: Blog[] = [], { type, ...content }: Action.BlogAction): Blog[] {
   switch (type) {
