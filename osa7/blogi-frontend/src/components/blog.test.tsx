@@ -13,7 +13,8 @@ describe('<Blog />', () => {
     url: 'osoite',
     user: {
       username: 'käyttäjä'
-    }
+    },
+    comments: []
   }
 
   test('should render title and author but not likes, address or who added it', () => {

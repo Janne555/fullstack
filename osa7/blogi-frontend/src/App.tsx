@@ -14,7 +14,6 @@ import { Route } from 'react-router-dom'
 import Blogs from './components/Blogs'
 import Blog from './components/Blog'
 import NavBar from './components/NavBar'
-import './app.css'
 import { Segment } from 'semantic-ui-react'
 
 const App: React.FC = () => {
@@ -41,7 +40,6 @@ const App: React.FC = () => {
   function handleLogout(): void {
     dispatch(logout())
   }
-
 
   function getUserById(id: string): Types.User | undefined {
     return users.find(user => user.id === id)

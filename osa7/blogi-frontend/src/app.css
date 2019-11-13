@@ -1,9 +1,0 @@
-div.navbar {
-  background-color: rgb(182, 182, 182);
-  display: flex;
-  flex-direction: row;
-}
-
-div.navbar > div {
-  padding: .5em 1em;
-}

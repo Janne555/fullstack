@@ -24,7 +24,8 @@ describe('<App />', () => {
       component = render(<App />)
       await waitForDomChange()
     })
-
+    if (!component)
+      throw Error()
     expect(component.queryByText('blogs for testaaja')).toBeInTheDocument()
   })
 })

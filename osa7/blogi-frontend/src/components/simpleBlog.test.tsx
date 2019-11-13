@@ -12,7 +12,8 @@ describe('<SimpleBlog />', () => {
     url: 'osoite',
     user: {
       username: 'käyttäjä'
-    }
+    },
+    comments: []
   }
 
   test('should render fields', () => {
