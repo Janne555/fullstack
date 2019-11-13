@@ -1,0 +1,36 @@
+describe('blogs', function () {
+  it('front page can be opened', function () {
+    cy.visit('http://localhost:3000')
+    cy.contains('log in to application')
+  })
+
+  it('logs in', function () {
+    cy.visit('http://localhost:3000')
+    cy.get('#username')
+      .type('root')
+    cy.get('#password')
+      .type('sekret')
+    cy.get('button')
+      .click()
+  })
+
+  it('creates a new blog', function () {
+    cy.visit('http://localhost:3000')
+    cy.get('#username')
+      .type('root')
+    cy.get('#password')
+      .type('sekret')
+    cy.get('button')
+      .click()
+    cy.get('[data-cy="new-blog"]')
+      .click()
+    cy.get('#title')
+      .type('otsikko')
+    cy.get('#author')
+      .type('kirjailija')
+    cy.get('#url')
+      .type('uusi')
+    cy.get('[data-cy="submit-new-blog"]')
+      .click()
+  })
+})

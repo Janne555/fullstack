@@ -19,7 +19,7 @@ export default function Togglable({ children, buttonLabel }: Props): JSX.Element
   return (
     <div>
       <div style={hideWhenVisible}>
-        <Button onClick={toggleVisibility}>{buttonLabel}</Button>
+        <Button data-cy="new-blog" onClick={toggleVisibility}>{buttonLabel}</Button>
       </div>
       <div style={showWhenVisible}>
         {children}

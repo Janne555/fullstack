@@ -28,17 +28,17 @@ export default function NewBlog({ onSubmit }: Props): JSX.Element {
       <Form onSubmit={handleSubmit} style={style}>
         <Form.Field>
           <label>title</label>
-          <input placeholder="title" name="title" />
+          <input id="title" placeholder="title" name="title" />
         </Form.Field>
         <Form.Field>
           <label >author</label>
-          <input placeholder="author" name="author" />
+          <input id="author" placeholder="author" name="author" />
         </Form.Field>
         <Form.Field placeholder="url">
           <label>url</label>
-          <input placeholder="url" name="url" />
+          <input id="url" placeholder="url" name="url" />
         </Form.Field>
-        <Button type="submit">create</Button>
+        <Button data-cy="submit-new-blog" type="submit">create</Button>
       </Form>
     </div>
   )

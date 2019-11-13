@@ -14,7 +14,8 @@
     "logs:prod": "heroku logs --tail",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "test": "cross-env NODE_ENV=test jest --verbose --watch --runInBand"
+    "test": "cross-env NODE_ENV=test jest --verbose --watch --runInBand",
+    "start:test": "tsc && echo \"compiled\" && cross-env NODE_ENV=test node dist/index.js"
   },
   "author": "",
   "license": "ISC",
