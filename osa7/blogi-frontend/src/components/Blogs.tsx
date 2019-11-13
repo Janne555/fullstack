@@ -13,7 +13,7 @@ export default function Blogs(): JSX.Element {
           <List.Item key={blog.id}>
             <List.Icon name="blogger" />
             <List.Content>
-              <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+              <Link data-cy={`blog-${blog.title}`} to={`/blogs/${blog.id}`}>{blog.title}</Link>
             </List.Content>
           </List.Item>))
       }

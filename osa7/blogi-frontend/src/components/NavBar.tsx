@@ -18,12 +18,13 @@ export default function NavBar(): JSX.Element {
         <Link to="/blogs">blogs</Link>
       </Menu.Item>
       <Menu.Item>
-        <Link to="/users" >users</Link>
+        <Link data-cy="users" to="/users" >users</Link>
       </Menu.Item>
       <Menu.Item>
         {user && `${user.username} logged in`}
       </Menu.Item>
       <Menu.Item
+        data-cy="logout"
         onClick={handleLogout}
       >
         logout

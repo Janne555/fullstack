@@ -9,6 +9,7 @@ import { unknownEndpoint, errorHandler, tokenExtractor } from './utils/middlewar
 import * as logger from './utils/logger'
 import userRouter from './controllers/users'
 import loginRouter from './controllers/login'
+import resetRouter from './controllers/reset'
 
 const app = express()
 
@@ -32,6 +33,11 @@ app.use(tokenExtractor)
 app.use('/api/login', loginRouter)
 app.use('/api/blog', blogRouter)
 app.use('/api/user', userRouter)
+
+if (process.env.NODE_ENV === 'test') {
+  app.use('/api/testing', resetRouter)
+}
+
 app.use(unknownEndpoint)
 app.use(errorHandler)
 

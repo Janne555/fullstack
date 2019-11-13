@@ -27,7 +27,7 @@ export default function Comments({ comments, onComment }: { comments: string[]; 
       }
       <Form reply onSubmit={handleSubmit}>
         <Form.TextArea />
-        <Button content='add comment' labelPosition='left' icon='edit' primary />
+        <Button data-cy="add-comment" content='add comment' labelPosition='left' icon='edit' primary />
       </Form>
     </Comment.Group>
   )

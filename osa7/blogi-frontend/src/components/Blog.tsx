@@ -41,9 +41,9 @@ export default function Blog({ blog }: Props): JSX.Element | null {
     <div>
       <h1>{blog.title}</h1>
       <a href={blog.url}>{blog.url}</a>
-      <div>{blog.likes} likes <button onClick={(): void => handleLike(blog)}>like</button></div>
+      <div>{blog.likes} likes <button data-cy="like" onClick={(): void => handleLike(blog)}>like</button></div>
       <div>added by {blog.user.username}</div>
-      {currentUser === blog.user.username && <button onClick={(): void => handleRemove(blog)}>remove</button>}
+      {currentUser === blog.user.username && <button data-cy="remove" onClick={(): void => handleRemove(blog)}>remove</button>}
       <Comments comments={blog.comments} onComment={handleClick} />
     </div>
   )
