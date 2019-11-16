@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import Authors from './Authors';
+import Books from './Books'
 
 const App: React.FC = () => {
   const [mode, setMode] = useState<'authors' | 'books'>('authors')
@@ -12,6 +13,7 @@ const App: React.FC = () => {
         <button onClick={() => setMode('books')}>books</button>
       </div>
       {mode === 'authors' && <Authors />}
+      {mode === 'books' && <Books />}
     </div>
   );
 }
