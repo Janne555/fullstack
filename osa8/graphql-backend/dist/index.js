@@ -84,12 +84,14 @@ let books = [
 ];
 const typeDefs = apollo_server_1.gql `
   type Query {
-    hello: String!
+    bookCount: Int!
+    authorCount: Int!
   }
 `;
 const resolvers = {
     Query: {
-        hello: () => { return "world"; }
+        bookCount: () => books.length,
+        authorCount: () => authors.length
     }
 };
 const server = new apollo_server_1.ApolloServer({
