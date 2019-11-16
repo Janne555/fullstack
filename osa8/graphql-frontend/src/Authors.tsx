@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { gql } from 'apollo-boost'
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
 export const AUTHORS = gql`
   {
@@ -12,8 +12,27 @@ export const AUTHORS = gql`
   }
 `
 
+const EDIT_AUTHOR = gql`
+  mutation editAuthor($name: String!, $setBornTo: Int!) {
+    editAuthor(
+      name: $name,
+      setBornTo: $setBornTo
+    ) {
+      name
+    }
+  }
+`
+
 const Authors: React.FC = () => {
   const { loading, error, data } = useQuery<{ allAuthors: { name: string, born?: number, bookCount: number }[] }>(AUTHORS)
+  const [editAuthor] = useMutation(EDIT_AUTHOR)
+  const [name, setName] = useState('')
+  const [born, setBorn] = useState('')
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    editAuthor({ variables: { name, setBornTo: Number(born) } })
+  }
 
   if (loading)
     return <p>loading...</p>
@@ -43,6 +62,17 @@ const Authors: React.FC = () => {
           }
         </tbody>
       </table>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>name</label>
+          <input onChange={e => setName(e.target.value)} name="name" value={name} />
+        </div>
+        <div>
+          <label>born</label>
+          <input type="number" name="born" value={born} onChange={e => setBorn(e.target.value)} />
+        </div>
+        <button>update author</button>
+      </form>
     </div>
   );
 }
