@@ -1,4 +1,4 @@
-import { ApolloServer, gql } from 'apollo-server'
+import { ApolloServer, gql, UserInputError } from 'apollo-server'
 import shortid = require('shortid')
 
 let authors = [
@@ -115,6 +115,10 @@ const typeDefs = gql`
       author: String!
       genres: [String!]!
     ): Book!
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+    ): Author
   }
 `
 
@@ -142,6 +146,14 @@ const resolvers = {
       const newBook = { ...args, id: shortid() }
       books = books.concat(newBook)
       return newBook
+    },
+    editAuthor: (root: any, args: { name: string, setBornTo: number }) => {
+      const author = authors.find(a => a.name === args.name)
+      if (!author)
+        return
+      const edited = { ...author, born: args.setBornTo }
+      authors = authors.map(a => a.name === args.name ? edited : a)
+      return edited
     }
   }
 }

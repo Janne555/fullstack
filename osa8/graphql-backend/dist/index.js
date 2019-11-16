@@ -113,6 +113,10 @@ const typeDefs = apollo_server_1.gql `
       author: String!
       genres: [String!]!
     ): Book!
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+    ): Author
   }
 `;
 const resolvers = {
@@ -139,6 +143,14 @@ const resolvers = {
             const newBook = { ...args, id: shortid() };
             books = books.concat(newBook);
             return newBook;
+        },
+        editAuthor: (root, args) => {
+            const author = authors.find(a => a.name === args.name);
+            if (!author)
+                return;
+            const edited = { ...author, born: args.setBornTo };
+            authors = authors.map(a => a.name === args.name ? edited : a);
+            return edited;
         }
     }
 };
