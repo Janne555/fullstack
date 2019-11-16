@@ -1,0 +1,25 @@
+{
+  "name": "graphql-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch-ts": "node_modules/typescript/bin/tsc -w",
+    "watch-node": "nodemon dist/index.js",
+    "start": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.9.9",
+    "graphql": "^14.5.8",
+    "shortid": "^2.2.15"
+  },
+  "devDependencies": {
+    "@types/shortid": "0.0.29",
+    "concurrently": "^5.0.0",
+    "nodemon": "^1.19.4",
+    "typescript": "^3.7.2"
+  }
+}
