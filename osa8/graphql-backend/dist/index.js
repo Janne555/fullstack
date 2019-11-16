@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_1 = require("apollo-server");
+const shortid = require("shortid");
 let authors = [
     {
         name: 'Robert Martin',
@@ -104,6 +105,15 @@ const typeDefs = apollo_server_1.gql `
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
   }
+
+  type Mutation {
+    addBook(
+      title: String!
+      published: Int!
+      author: String!
+      genres: [String!]!
+    ): Book!
+  }
 `;
 const resolvers = {
     Query: {
@@ -120,6 +130,15 @@ const resolvers = {
         },
         allAuthors: () => {
             return authors.map(a => ({ ...a, bookCount: books.filter(b => b.author === a.name).length }));
+        }
+    },
+    Mutation: {
+        addBook: (root, args) => {
+            if (!authors.some(a => a.name === args.author))
+                authors = authors.concat({ name: args.author, id: shortid() });
+            const newBook = { ...args, id: shortid() };
+            books = books.concat(newBook);
+            return newBook;
         }
     }
 };

@@ -1,4 +1,5 @@
 import { ApolloServer, gql } from 'apollo-server'
+import shortid = require('shortid')
 
 let authors = [
   {
@@ -106,6 +107,15 @@ const typeDefs = gql`
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
   }
+
+  type Mutation {
+    addBook(
+      title: String!
+      published: Int!
+      author: String!
+      genres: [String!]!
+    ): Book!
+  }
 `
 
 const resolvers = {
@@ -123,6 +133,15 @@ const resolvers = {
     },
     allAuthors: () => {
       return authors.map(a => ({ ...a, bookCount: books.filter(b => b.author === a.name).length }))
+    }
+  },
+  Mutation: {
+    addBook: (root: any, args: typeof books[0]) => {
+      if (!authors.some(a => a.name === args.author))
+        authors = authors.concat({ name: args.author, id: shortid() })
+      const newBook = { ...args, id: shortid() }
+      books = books.concat(newBook)
+      return newBook
     }
   }
 }
