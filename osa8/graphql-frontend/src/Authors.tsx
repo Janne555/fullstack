@@ -25,7 +25,7 @@ const EDIT_AUTHOR = gql`
 
 const Authors: React.FC = () => {
   const { loading, error, data } = useQuery<{ allAuthors: { name: string, born?: number, bookCount: number }[] }>(AUTHORS)
-  const [editAuthor] = useMutation(EDIT_AUTHOR)
+  const [editAuthor] = useMutation(EDIT_AUTHOR, { refetchQueries: [{ query: AUTHORS }] })
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
 
@@ -65,7 +65,14 @@ const Authors: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label>name</label>
-          <input onChange={e => setName(e.target.value)} name="name" value={name} />
+          <select onChange={e => setName(e.target.value)}>
+            <option></option>
+            {
+              data.allAuthors.map(author => (
+                <option key={author.name} value={author.name}>{author.name}</option>
+              ))
+            }
+          </select>
         </div>
         <div>
           <label>born</label>
