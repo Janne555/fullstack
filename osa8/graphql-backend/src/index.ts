@@ -73,29 +73,46 @@ const resolvers = {
   Mutation: {
     addBook: async (root: any, args: any) => {
       const author = await Author.findOne({ name: args.author })
-      console.log(author)
       if (!author)
         throw new UserInputError("no such author")
-      const book = new Book({
-        title: args.title,
-        published: args.published,
-        genres: args.genres,
-        author: author._id
-      })
-      await book.save();
-      await book.execPopulate()
-      return book
+      try {
+        const book = new Book({
+          title: args.title,
+          published: args.published,
+          genres: args.genres,
+          author: author._id
+        })
+        await book.save();
+        await book.execPopulate()
+        return book
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args
+        })
+      }
     },
-    editAuthor: (root: any, args: { name: string, setBornTo: number }) => {
-      return Author.findOneAndUpdate({ name: args.name }, { born: args.setBornTo })
+    editAuthor: async (root: any, args: { name: string, setBornTo: number }) => {
+      try {
+        return await Author.findOneAndUpdate({ name: args.name }, { born: args.setBornTo });
+      }
+      catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args
+        });
+      }
     },
-    addAuthor: (root: any, args: { name: string, born?: number }) => {
-      console.log(args)
-      const author = new Author({
-        name: args.name,
-        born: args.born
-      })
-      return author.save()
+    addAuthor: async (root: any, args: { name: string, born?: number }) => {
+      try {
+        const author = new Author({
+          name: args.name,
+          born: args.born
+        })
+        return await author.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args
+        })
+      }
     }
   }
 }

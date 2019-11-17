@@ -72,29 +72,48 @@ const resolvers = {
     Mutation: {
         addBook: async (root, args) => {
             const author = await author_1.default.findOne({ name: args.author });
-            console.log(author);
             if (!author)
                 throw new apollo_server_1.UserInputError("no such author");
-            const book = new book_1.default({
-                title: args.title,
-                published: args.published,
-                genres: args.genres,
-                author: author._id
-            });
-            await book.save();
-            await book.execPopulate();
-            return book;
+            try {
+                const book = new book_1.default({
+                    title: args.title,
+                    published: args.published,
+                    genres: args.genres,
+                    author: author._id
+                });
+                await book.save();
+                await book.execPopulate();
+                return book;
+            }
+            catch (error) {
+                throw new apollo_server_1.UserInputError(error.message, {
+                    invalidArgs: args
+                });
+            }
         },
-        editAuthor: (root, args) => {
-            return author_1.default.findOneAndUpdate({ name: args.name }, { born: args.setBornTo });
+        editAuthor: async (root, args) => {
+            try {
+                return await author_1.default.findOneAndUpdate({ name: args.name }, { born: args.setBornTo });
+            }
+            catch (error) {
+                throw new apollo_server_1.UserInputError(error.message, {
+                    invalidArgs: args
+                });
+            }
         },
-        addAuthor: (root, args) => {
-            console.log(args);
-            const author = new author_1.default({
-                name: args.name,
-                born: args.born
-            });
-            return author.save();
+        addAuthor: async (root, args) => {
+            try {
+                const author = new author_1.default({
+                    name: args.name,
+                    born: args.born
+                });
+                return await author.save();
+            }
+            catch (error) {
+                throw new apollo_server_1.UserInputError(error.message, {
+                    invalidArgs: args
+                });
+            }
         }
     }
 };
