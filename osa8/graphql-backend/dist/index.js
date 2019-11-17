@@ -8,8 +8,11 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const author_1 = __importDefault(require("./models/author"));
 const book_1 = __importDefault(require("./models/book"));
+const user_1 = __importDefault(require("./models/user"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 dotenv_1.default.config();
 const MONGODB_URI = process.env.MONGODB_URI;
+const JWT_SECRET = "THIS_IS_SUPER_SECRET";
 if (!MONGODB_URI)
     throw Error("no mongo uri");
 mongoose_1.default.set('useFindAndModify', false);
@@ -17,12 +20,22 @@ mongoose_1.default.connect(MONGODB_URI, { useNewUrlParser: true })
     .then(() => { console.log("connected to mongodb"); })
     .catch(error => { console.error('failed to connect to mongodb', error); });
 const typeDefs = apollo_server_1.gql `
+  type User {
+    username: String!
+    favoriteGenre: String!
+    id: ID!
+  }
+
   type Book {
     title: String!
     published: Int!
     author: Author!
     genres: [String!]!
     id: ID!
+  }
+
+  type Token {
+    value: String!
   }
 
   type Author {
@@ -37,6 +50,7 @@ const typeDefs = apollo_server_1.gql `
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
+    me: User
   }
 
   type Mutation {
@@ -54,6 +68,14 @@ const typeDefs = apollo_server_1.gql `
       name: String!
       born: Int
     ): Author!
+    createUser(
+      username: String!
+      favoriteGenre: String!
+    ): User
+    login(
+      username: String!
+      password: String!
+    ): Token
   }
 `;
 const resolvers = {
@@ -67,10 +89,15 @@ const resolvers = {
         },
         allAuthors: () => {
             return author_1.default.find({});
+        },
+        me: (root, args, context) => {
+            return context.currentUser;
         }
     },
     Mutation: {
-        addBook: async (root, args) => {
+        addBook: async (root, args, context) => {
+            if (!context.currentUser)
+                throw new apollo_server_1.UserInputError("missing auth");
             const author = await author_1.default.findOne({ name: args.author });
             if (!author)
                 throw new apollo_server_1.UserInputError("no such author");
@@ -91,7 +118,9 @@ const resolvers = {
                 });
             }
         },
-        editAuthor: async (root, args) => {
+        editAuthor: async (root, args, context) => {
+            if (!context.currentUser)
+                throw new apollo_server_1.UserInputError("missing auth");
             try {
                 return await author_1.default.findOneAndUpdate({ name: args.name }, { born: args.setBornTo });
             }
@@ -114,13 +143,53 @@ const resolvers = {
                     invalidArgs: args
                 });
             }
+        },
+        login: async (root, args) => {
+            const user = await user_1.default.findOne({ username: args.username });
+            if (!user || args.password !== 'secret')
+                throw new apollo_server_1.UserInputError("wrong credentials");
+            const userForToken = {
+                username: user.username,
+                id: user._id
+            };
+            return { value: jsonwebtoken_1.default.sign(userForToken, JWT_SECRET) };
+        },
+        createUser: async (root, args) => {
+            try {
+                const user = new user_1.default({
+                    username: args.username,
+                    favoriteGenre: args.favoriteGenre
+                });
+                return user.save();
+            }
+            catch (error) {
+                throw new apollo_server_1.UserInputError(error.message, {
+                    invalidArgs: args
+                });
+            }
         }
     }
 };
 const server = new apollo_server_1.ApolloServer({
     typeDefs,
     resolvers,
+    context: async ({ req }) => {
+        const auth = req ? req.headers.authorization : null;
+        if (auth && auth.toLowerCase().startsWith('bearer ')) {
+            const decodedToken = jsonwebtoken_1.default.verify(auth.substring(7), JWT_SECRET);
+            if (isToken(decodedToken)) {
+                const currentUser = await user_1.default.findById(decodedToken.id);
+                return { currentUser };
+            }
+            else {
+                throw Error("whoopsie");
+            }
+        }
+    }
 });
+function isToken(token) {
+    return token.id !== undefined;
+}
 server.listen().then(({ url }) => {
     console.log(`Server ready at ${url}`);
 });
