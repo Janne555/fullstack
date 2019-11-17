@@ -62,13 +62,9 @@ const resolvers = {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allBooks: (root: any, args: { author?: string, genre?: string }) => {
-      // if (args.author && args.genre)
-      //   return books.filter(b => b.genres.some(g => g === args.genre) && b.author === args.author)
-      // if (args.author)
-      //   return books.filter(b => b.author === args.author)
-      // if (args.genre)
-      //   return books.filter(b => b.genres.some(g => g === args.genre))
-      return Book.find({})
+      if (args.genre)
+        return Book.find({ genres: { $in: [args.genre] } }).populate('author')
+      return Book.find({}).populate('author')
     },
     allAuthors: () => {
       return Author.find({})
@@ -91,12 +87,7 @@ const resolvers = {
       return book
     },
     editAuthor: (root: any, args: { name: string, setBornTo: number }) => {
-      // const author = authors.find(a => a.name === args.name)
-      // if (!author)
-      //   return
-      // const edited = { ...author, born: args.setBornTo }
-      // authors = authors.map(a => a.name === args.name ? edited : a)
-      // return edited
+      return Author.findOneAndUpdate({ name: args.name }, { born: args.setBornTo })
     },
     addAuthor: (root: any, args: { name: string, born?: number }) => {
       console.log(args)
