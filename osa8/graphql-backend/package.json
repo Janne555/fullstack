@@ -14,11 +14,16 @@
   "dependencies": {
     "apollo-server": "^2.9.9",
     "graphql": "^14.5.8",
+    "mongoose": "^5.7.11",
+    "mongoose-unique-validator": "^2.0.3",
     "shortid": "^2.2.15"
   },
   "devDependencies": {
+    "@types/mongoose": "^5.5.32",
+    "@types/mongoose-unique-validator": "^1.0.3",
     "@types/shortid": "0.0.29",
     "concurrently": "^5.0.0",
+    "dotenv": "^8.2.0",
     "nodemon": "^1.19.4",
     "typescript": "^3.7.2"
   }
