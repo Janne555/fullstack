@@ -110,9 +110,8 @@ const resolvers = {
           genres: args.genres,
           author: author._id
         })
-        await book.save();
-        await book.execPopulate()
-        return book
+        await book.save()
+        return book.populate('author').execPopulate()
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args
