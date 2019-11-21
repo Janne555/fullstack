@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
 import { AUTHORS } from './Authors'
+import { BOOKS_BY_GENRE } from './Books'
+import { Book } from './types'
 
 
 const ADD_BOOK = gql`
@@ -13,9 +15,11 @@ const ADD_BOOK = gql`
       genres: $genres
     ) {
       title
-      author
       published
       genres
+      author {
+        name
+      }
     }
   }
 `
@@ -23,7 +27,18 @@ const ADD_BOOK = gql`
 export default function BookForm() {
   const [genres, setGenres] = useState<string[]>([])
   const [genre, setGenre] = useState<string>('')
-  const [addBook, { data }] = useMutation(ADD_BOOK, { refetchQueries: [{ query: AUTHORS }] })
+  const [addBook] = useMutation(ADD_BOOK, {
+    onError: console.error,
+    update: (store, response) => {
+      const dataInStore = store.readQuery<{allBooks: Book[]}>({ query: BOOKS_BY_GENRE })!
+      dataInStore.allBooks.push(response.data.addBook)
+      store.writeQuery({
+        query: BOOKS_BY_GENRE,
+        data: dataInStore
+      })
+    },
+    refetchQueries: [{ query: AUTHORS }]
+  })
 
   function addGenre(e: React.MouseEvent<HTMLButtonElement>) {
     if (!genre)

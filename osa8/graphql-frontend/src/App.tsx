@@ -4,11 +4,12 @@ import Authors from './Authors';
 import Books from './Books'
 import BookForm from './BookForm'
 import LoginForm from './LoginForm';
+import Recommend from './Recommend';
 
 export const AuthContext = React.createContext<{ token: string | null, updateToken: (token: string | null) => void }>({ token: null, updateToken: () => { } })
 
 const App: React.FC = () => {
-  const [mode, setMode] = useState<'authors' | 'books' | 'bookform' | 'login'>('authors')
+  const [mode, setMode] = useState<'authors' | 'books' | 'bookform' | 'login' | 'recommend'>('authors')
   const [token, setToken] = React.useState<string | null>(localStorage.getItem("token"))
 
   function updateToken(token: string | null): void {
@@ -26,6 +27,7 @@ const App: React.FC = () => {
           <button onClick={() => setMode('authors')}>authors</button>
           <button onClick={() => setMode('books')}>books</button>
           {token && <button onClick={() => setMode('bookform')}>add book</button>}
+          {token && <button onClick={() => setMode('recommend')}>recommend</button>}
           {token
             ? <button onClick={() => updateToken(null)}>logout</button>
             : <button onClick={() => setMode('login')}>login</button>
@@ -35,6 +37,7 @@ const App: React.FC = () => {
         {mode === 'books' && <Books />}
         {mode === 'bookform' && <BookForm />}
         {mode === 'login' && !token && <LoginForm />}
+        {mode === 'recommend' && <Recommend />}
       </div>
     </AuthContext.Provider>
   );

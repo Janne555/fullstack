@@ -1,21 +1,32 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { gql } from 'apollo-boost'
-import { useQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { Book } from './types'
+import BookTable from './BookTable'
 
-const BOOKS = gql`
-  {
-    allBooks {
+export const BOOKS_BY_GENRE = gql`
+  query allBooks($genre: String) {
+    allBooks(genre: $genre) {
       title
       author {
         name
       }
       published
+      genres
     }
   }
 `
 
 export default function Books() {
-  const { loading, error, data } = useQuery<{ allBooks: { title: string, author: { name: string }, published: number }[] }>(BOOKS)
+  const [getBooks, { loading, data, error }] = useLazyQuery<{ allBooks: Book[] }>(BOOKS_BY_GENRE)
+  const [genre, setGenre] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (genre)
+      getBooks({ variables: { genre } })
+    else
+      getBooks()
+  }, [genre, getBooks])
 
   if (loading)
     return <p>loading...</p>
@@ -25,26 +36,15 @@ export default function Books() {
   return (
     <div>
       <h1>books</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>title</th>
-            <th>author</th>
-            <th>published</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            data.allBooks.map(book => (
-              <tr key={book.title}>
-                <td>{book.title}</td>
-                <td>{book.author.name}</td>
-                <td>{book.published}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
+      <button onClick={() => setGenre(null)}>reset</button>
+      {
+        Array.from(new Set(data.allBooks
+          .flatMap(book => book.genres)))
+          .map(genre => (
+            <button onClick={() => setGenre(genre)} key={genre}>{genre}</button>
+          ))
+      }
+      <BookTable books={data.allBooks} />
     </div>
   )
 }

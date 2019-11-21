@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { gql } from 'apollo-boost'
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { AuthContext } from './App';
+import { Author } from './types';
 
 export const AUTHORS = gql`
   {
@@ -25,7 +26,7 @@ const EDIT_AUTHOR = gql`
 `
 
 const Authors: React.FC = () => {
-  const { loading, error, data } = useQuery<{ allAuthors: { name: string, born?: number, bookCount: number }[] }>(AUTHORS)
+  const { loading, error, data } = useQuery<{ allAuthors: Author[] }>(AUTHORS)
   const { token } = useContext(AuthContext)
 
   if (loading)
