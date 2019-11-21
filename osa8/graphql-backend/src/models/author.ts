@@ -11,4 +11,12 @@ const schema = new Schema({
     type: Number,
   },
 })
+
+schema.virtual('bookCount', {
+  ref: 'Book',
+  localField: '_id',
+  foreignField: 'author',
+  count: true
+})
+
 export default model('Author', schema)
