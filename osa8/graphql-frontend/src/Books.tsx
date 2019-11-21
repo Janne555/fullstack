@@ -6,14 +6,16 @@ const BOOKS = gql`
   {
     allBooks {
       title
-      author
+      author {
+        name
+      }
       published
     }
   }
 `
 
 export default function Books() {
-  const { loading, error, data } = useQuery<{ allBooks: { title: string, author: string, published: number }[] }>(BOOKS)
+  const { loading, error, data } = useQuery<{ allBooks: { title: string, author: { name: string }, published: number }[] }>(BOOKS)
 
   if (loading)
     return <p>loading...</p>
@@ -36,7 +38,7 @@ export default function Books() {
             data.allBooks.map(book => (
               <tr key={book.title}>
                 <td>{book.title}</td>
-                <td>{book.author}</td>
+                <td>{book.author.name}</td>
                 <td>{book.published}</td>
               </tr>
             ))
