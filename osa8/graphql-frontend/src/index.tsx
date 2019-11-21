@@ -9,9 +9,6 @@ import { ApolloProvider } from '@apollo/react-hooks'
 const client = new ApolloClient({
   uri: 'http://localhost:4000'
 })
-
-
-
 ReactDOM.render(
   <ApolloProvider client={client}>
     <App />
