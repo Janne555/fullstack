@@ -87,8 +87,8 @@ const resolvers = {
                 return book_1.default.find({ genres: { $in: [args.genre] } }).populate('author');
             return book_1.default.find({}).populate('author');
         },
-        allAuthors: () => {
-            return author_1.default.find({});
+        allAuthors: async () => {
+            return author_1.default.find({}).populate('bookCount');
         },
         me: (root, args, context) => {
             return context.currentUser;
@@ -109,8 +109,7 @@ const resolvers = {
                     author: author._id
                 });
                 await book.save();
-                await book.execPopulate();
-                return book;
+                return book.populate('author').execPopulate();
             }
             catch (error) {
                 throw new apollo_server_1.UserInputError(error.message, {
