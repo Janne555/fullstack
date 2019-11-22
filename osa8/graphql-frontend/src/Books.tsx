@@ -1,25 +1,55 @@
 import React, { useState, useEffect } from 'react'
 import { gql } from 'apollo-boost'
-import { useLazyQuery } from '@apollo/react-hooks';
+import { useLazyQuery, useSubscription } from '@apollo/react-hooks';
 import { Book } from './types'
 import BookTable from './BookTable'
+
+const BOOK_DETAILS = gql`
+  fragment BookDetails on Book {
+    title
+    author {
+      name
+    }
+    published
+    genres
+  }
+`
 
 export const BOOKS_BY_GENRE = gql`
   query allBooks($genre: String) {
     allBooks(genre: $genre) {
-      title
-      author {
-        name
-      }
-      published
-      genres
+      ...BookDetails
     }
   }
+  ${BOOK_DETAILS}
+`
+
+
+
+const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      ...BookDetails
+    }
+  }
+  ${BOOK_DETAILS}
 `
 
 export default function Books() {
   const [getBooks, { loading, data, error }] = useLazyQuery<{ allBooks: Book[] }>(BOOKS_BY_GENRE)
   const [genre, setGenre] = useState<string | null>(null)
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData, client }) => {
+      const dataInStore = client.readQuery({ query: BOOKS_BY_GENRE })
+      if (!dataInStore.allBooks.some((book: Book) => book.title === subscriptionData.data.bookAdded.title)) {
+        window.alert(`book titled "${subscriptionData.data.bookAdded.title}" added`)
+        client.writeQuery({
+          query: BOOKS_BY_GENRE,
+          data: { allBooks: dataInStore.allBooks.concat(subscriptionData.data.bookAdded) }
+        })
+      }
+    },
+  })
 
   useEffect(() => {
     if (genre)
