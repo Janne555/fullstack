@@ -1,5 +1,4 @@
-import { ApolloServer, gql, UserInputError } from 'apollo-server'
-import shortid from 'shortid'
+import { ApolloServer, gql, UserInputError, PubSub } from 'apollo-server'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import Author from './models/author'
@@ -7,6 +6,7 @@ import Book from './models/book'
 import User from './models/user'
 import jwt from 'jsonwebtoken'
 dotenv.config()
+const pubsub = new PubSub()
 
 const MONGODB_URI = process.env.MONGODB_URI
 const JWT_SECRET = "THIS_IS_SUPER_SECRET"
@@ -78,6 +78,10 @@ const typeDefs = gql`
       password: String!
     ): Token
   }
+
+  type Subscription {
+    bookAdded: Book!
+  }
 `
 
 const resolvers = {
@@ -111,7 +115,11 @@ const resolvers = {
           author: author._id
         })
         await book.save()
-        return book.populate('author').execPopulate()
+        await book.populate('author').execPopulate()
+
+        pubsub.publish('BOOK_ADDED', { bookAdded: book })
+
+        return book
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args
@@ -168,6 +176,11 @@ const resolvers = {
         })
       }
     }
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
+    }
   }
 }
 
@@ -192,6 +205,7 @@ function isToken(token: any): token is { id: string } {
   return token.id !== undefined
 }
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at  ${subscriptionsUrl}`)
 })
