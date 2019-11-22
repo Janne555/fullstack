@@ -11,6 +11,7 @@ const book_1 = __importDefault(require("./models/book"));
 const user_1 = __importDefault(require("./models/user"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 dotenv_1.default.config();
+const pubsub = new apollo_server_1.PubSub();
 const MONGODB_URI = process.env.MONGODB_URI;
 const JWT_SECRET = "THIS_IS_SUPER_SECRET";
 if (!MONGODB_URI)
@@ -77,6 +78,10 @@ const typeDefs = apollo_server_1.gql `
       password: String!
     ): Token
   }
+
+  type Subscription {
+    bookAdded: Book!
+  }
 `;
 const resolvers = {
     Query: {
@@ -109,7 +114,9 @@ const resolvers = {
                     author: author._id
                 });
                 await book.save();
-                return book.populate('author').execPopulate();
+                await book.populate('author').execPopulate();
+                pubsub.publish('BOOK_ADDED', { bookAdded: book });
+                return book;
             }
             catch (error) {
                 throw new apollo_server_1.UserInputError(error.message, {
@@ -167,6 +174,11 @@ const resolvers = {
                 });
             }
         }
+    },
+    Subscription: {
+        bookAdded: {
+            subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
+        }
     }
 };
 const server = new apollo_server_1.ApolloServer({
@@ -189,6 +201,7 @@ const server = new apollo_server_1.ApolloServer({
 function isToken(token) {
     return token.id !== undefined;
 }
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
     console.log(`Server ready at ${url}`);
+    console.log(`Subscriptions ready at  ${subscriptionsUrl}`);
 });
