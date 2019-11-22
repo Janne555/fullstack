@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { gql } from 'apollo-boost'
 import { useLazyQuery, useQuery } from '@apollo/react-hooks';
 import { Book } from './types'
