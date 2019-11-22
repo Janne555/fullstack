@@ -17,6 +17,7 @@ const JWT_SECRET = "THIS_IS_SUPER_SECRET";
 if (!MONGODB_URI)
     throw Error("no mongo uri");
 mongoose_1.default.set('useFindAndModify', false);
+mongoose_1.default.set('debug', true);
 mongoose_1.default.connect(MONGODB_URI, { useNewUrlParser: true })
     .then(() => { console.log("connected to mongodb"); })
     .catch(error => { console.error('failed to connect to mongodb', error); });

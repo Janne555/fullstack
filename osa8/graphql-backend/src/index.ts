@@ -15,6 +15,7 @@ if (!MONGODB_URI)
   throw Error("no mongo uri")
 
 mongoose.set('useFindAndModify', false)
+mongoose.set('debug', true)
 
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true })
   .then(() => { console.log("connected to mongodb") })
